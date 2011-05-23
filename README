@@ -1,0 +1,34 @@
+= GSoC Diary
+
+== 2011-05-23
+
+We talked with Cedric and decided that I'll base my rtf import work on `master`
+(as opposed to `libreoffice-3-4`). The motivation from my side was that
+writerfilter - the module that will contain the new rtf import - uses gbuild on
+master, so working on `master` avoids potential merge conflicts. The initial
+clone takes time, so I cloned the repos earlier (on 19th) and now I have
+(successfully) built master on my notebook.
+
+Michael Stahl (Oracle) mailed me, mentioning that they started to port the rtf
+import to writerfilter in the
+http://hg.services.openoffice.org/hg/cws/rtftok01/[rtftok01] CWS. The good news
+is that I built the CWS and a hello world even works here (almost, the color of
+the text is blue, but that's a minor thing, I guess). The bad news is that they
+wrote a lot of XSL code to achieve that, which will be hard to maintain. We
+discussed this with Cedric, so far what we have:
+
+- the basic idea of using the RTF spec in OOXML format as a base of the importer is fine.
+- generating code from the model in multiple steps is OK, so the result of the
+  first step will be checked in to the repo (the original model can't be
+  checked in due to legal reasons) and the rest can be generated build-time.
+
+It is not clear yet what to use for XML transformation. Possible candidates:
+
+- XSL: this is what the Oracle guys did, building on top of it is nice, but it
+  has its maintenance problems.
+- Python/Perl: possible, but Python is not a build-requirement (reusing the
+  internal Python is tricky), and my perl knowledge is weak.
+- $$C++$$: obvious choice, but rewriting the existing ~ 2000 line of XSL code
+  in $$C++$$ is boring.
+
+So - XSL or $$C++$$? We'll probably decide tomorrow.
