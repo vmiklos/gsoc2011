@@ -32,3 +32,57 @@ It is not clear yet what to use for XML transformation. Possible candidates:
   in $$C++$$ is boring.
 
 So - XSL or $$C++$$? We'll probably decide tomorrow.
+
+== 2011-05-24
+
+We had a longer talk on IRC with Cedric yesterday evening. To summarize our
+decisions:
+
+- I'll avoid flex and XSL in the new rtf import
+- The rtf spec has a sample rtf reader (starting from page 209), that will be a
+  good start for parsing. I'll write it in a way that whenever it meets an
+  unknown control world, it'll emit a TODO (using `OSL_TRACE`) so TODOs will
+  continuously disappear as I progress.
+
+We considered a few external libs, but they are in most cases too high-level:
+given that I expect I can just pass most of the rtf control words to the domain
+mapper, an API like the one of http://sourceforge.net/projects/librtf/[librtf]
+is not that useful.
+
+So, today I started writing the necessary code to get the stream which contains
+the rtf data: the existing RtfFilter no longer calls into `sw` via UNO to
+invoke the old rtf export, but creates the domain mapper for rtf and the new
+RTFDocument class.
+
+What I did (with compile-testing only) is creating an
+RTFDocumentImpl::resolve() skeleton, my current target is to get it called.
+
+The problem here is that whenever I call to the rtftok lib from RtfFilter,
+somehow the component isn't loaded, ie. even docx import won't work. (No, no
+build-time warning, no "unresolved symbol" error message, just a meaningless
+"General Error. General input/output error.")
+
+To debug such problems, I had to touch `osl/unx/module.c` inside the sal
+module, and rebuidl with dbglevel=2 to get the OSL_TRACE() which prints out
+dlopen() errors. And that showed the real problem:
+
+----
+Trace 1: "Error osl_loadModule: librtftokli.so: cannot open shared object file: No such file or directory
+----
+
+(Also, running ldd or the checkdll tool in the *install* dir helps, I ran it in
+solver, where it does not.)
+
+Obviously.. I forgot rtftok is a new lib, so I have to touch
+scp2/source/ooo/file_library_ooo.scp and re-run `make dev-install`.
+
+At the end of the day, I get:
+
+----
+$ ./soffice.bin --headless --convert-to foo --outdir ../../../lo-test-files/writer ../../../lo-test-files/writer/hello.rtf
+Trace 30515/1: "virtual sal_Bool RtfFilter::filter(const com::sun::star::uno::Sequence<com::sun::star::beans::PropertyValue>&)"
+Trace 30515/1: "virtual void writerfilter::rtftok::RTFDocumentImpl::resolve(writerfilter::Stream&)"
+----
+
+which is exactly what I wanted. The result can be even opened, though of course
+it's an empty document at the moment.
