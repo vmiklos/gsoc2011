@@ -86,3 +86,24 @@ Trace 30515/1: "virtual void writerfilter::rtftok::RTFDocumentImpl::resolve(writ
 
 which is exactly what I wanted. The result can be even opened, though of course
 it's an empty document at the moment.
+
+== 2011-05-24
+
+I introduced `RTFDocumentImpl::Strm()`, so reading a character from the input
+stream is now using the same API what the exporter uses for writing the output.
+
+I've read through Appendix A (How to write an RTF Reader) of the RTF spec, the
+"Other Problem Areas" part was especially useful.
+
+My first target is to import a hello world RTF. As expected, even that is not
+trivial. I added code that detects RTF control words (and their parameters, if
+there are any), so now the first string it finds is "Times New Roman" in the
+font table. Of course, since it has no idea the font table is something
+special, where even normal strings should not be displayed.
+
+Finally I implemented a function that aggregates "text" characters to a string
+buffer, so now I have output, like:
+
+----
+TODO handle chars 'Hello world!'"
+----
