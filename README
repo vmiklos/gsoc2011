@@ -87,7 +87,7 @@ Trace 30515/1: "virtual void writerfilter::rtftok::RTFDocumentImpl::resolve(writ
 which is exactly what I wanted. The result can be even opened, though of course
 it's an empty document at the moment.
 
-== 2011-05-24
+== 2011-05-25
 
 I introduced `RTFDocumentImpl::Strm()`, so reading a character from the input
 stream is now using the same API what the exporter uses for writing the output.
@@ -107,3 +107,37 @@ buffer, so now I have output, like:
 ----
 TODO handle chars 'Hello world!'"
 ----
+
+== 2011-05-26
+
+http://cgit.freedesktop.org/libreoffice/filters/commit/?id=07e389463c185f9083110016b46b5404e0d319ea[Fixed]
+build of writerfilter when `DEBUG_LOGGING` is defined. Also discussed the
+debug_setup.mk problem (the debug flags were not enabled in a debug build) with
+David, that's fixed in master now. I also rebased my `filters` repo to have
+those fixes.
+
+Trying to find out why the logger creates empty xml files under /tmp. The
+problem was that in RtfFilter::filter(), I opened the domainmapper logger, but
+did not close it. Without that, not a single byte was written to the log. ;)
+
+Implemented code to keep track of opening and closing braces, which pointed out
+a bug (the last char of the document was parsed twice), fixed.
+
+Next is to have a list of destination keywords: that's important because if a
+keyword is a destination, then I should ignore the whole group, not just the
+keyword itself, as with other types. To do that, I wrote a little script to
+check the RTF spec what other keyword types are there.
+
+Learned the hard way that extern arrays should be declared as:
+
+----
+extern RTFSymbol aRTFControlWords[];
+----
+
+ie the `[]` should be after the variable name, not after the type name.
+
+At the end of the day the parser skips destinations which are known (are in the
+table) but not handled. The target is still to recognize that the hello world
+document has the only string "Hello World!". Right now the only missing but for
+this is to handle `\*\foo`, where `\foo` is an unknwon keyword (not in the
+table). I'll implement that tomorrow.
