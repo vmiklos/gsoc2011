@@ -60,6 +60,8 @@ parser.close()
 c = 3 # ignore first line
 while c < len(handler.result):
 	name = handler.result[c]
+	# that '1' should be italic in the spec then it would be ignored..
+	name = name.replace('striked1', 'striked')
 	c += 1
 	where = handler.result[c]
 	c += 1
@@ -81,4 +83,21 @@ while c < len(handler.result):
 		'Value': 'CONTROL_VALUE'
 		}[t]
 	c += 1
-	print '{"%s", %s},' % (name, t)
+	# generate enum constant
+	if not name.isalpha():
+		enum = {
+			# use OOO_STRING_SVTOOLS_RTF_ naming where possible
+			"'": "HEXCHAR",
+			"-": "OPTHYPH",
+			"*": "IGNORE",
+			":": "SUBENTRY", # own
+			"\\\\": "BACKSLASH", # own
+			"_": "NOBRKHYPH",
+			"{": "LBRACE", # own
+			"|": "FORMULA",
+			"}": "RBRACE", # own
+			"~": "NOBREAK"
+			}[name]
+	else:
+		enum = name.upper()
+	print '{"%s", %s, RTF_%s},' % (name, t, enum)
