@@ -57,6 +57,7 @@ parser.setContentHandler(handler)
 parser.feed(open("keywords.xml").read())
 parser.close()
 
+enumout = ""
 c = 3 # ignore first line
 while c < len(handler.result):
 	name = handler.result[c]
@@ -101,3 +102,6 @@ while c < len(handler.result):
 	else:
 		enum = name.upper()
 	print '{"%s", %s, RTF_%s},' % (name, t, enum)
+	enumout += "RTF_%s,\n" % enum
+
+print "enum\n{\n" + enumout + "}"
