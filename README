@@ -141,3 +141,37 @@ table) but not handled. The target is still to recognize that the hello world
 document has the only string "Hello World!". Right now the only missing but for
 this is to handle `\*\foo`, where `\foo` is an unknwon keyword (not in the
 table). I'll implement that tomorrow.
+
+== 2011-05-27
+
+Got a patch from Cedric to fix build from `tail_build`. Had a look at the
+problem "xml files in /tmp are almost empty", it turns out I accidently rebuilt
+the resourcemodel library with plain `make -sr`, on order to get the xml dumps,
+I always need to:
+
+----
+make -sr dbglevel=2
+----
+
+Then I added support for `\*`, so now the parser recognizes that "Hello world!"
+is the only text token in the document. The dmapper xml log has the "!" suffix,
+but not writer itself. After checking what the docx importer does, it turned
+out that `utext()` expects a `\r` at the end of each paragraph, which gets
+dropped.  Once I did the same in the RTF importer, a document containing a
+"Hello world!" is imported! :)
+
+Then I spent some time separating runs from properties, as previously every run
+was handled as a paragraph.
+
+Next, I looked how character properties are handled: as an example I want to
+handle *bold* characters. It turned out a lot of preparation is needed to do
+so:
+
+- the domain mapper takes a class implementing `writerfilter::Reference<Properties>`
+- the class can register properties using a class implementing the `Sprm` interface
+- the `Sprm` interface requires to store property parameters in a class
+  implementing the `Value` interface
+
+Once this was done, my test document containing a bold character was imported
+properly, and I only needed to implement the reset of sprms at the end of a
+group.
