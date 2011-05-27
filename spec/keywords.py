@@ -57,12 +57,18 @@ parser.setContentHandler(handler)
 parser.feed(open("keywords.xml").read())
 parser.close()
 
+keywords = []
 enumout = ""
 c = 3 # ignore first line
 while c < len(handler.result):
 	name = handler.result[c]
 	# that '1' should be italic in the spec then it would be ignored..
 	name = name.replace('striked1', 'striked')
+	if name in keywords:
+		c += 3
+		continue
+	else:
+		keywords.append(name)
 	c += 1
 	where = handler.result[c]
 	c += 1
