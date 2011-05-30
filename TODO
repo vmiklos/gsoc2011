@@ -1,0 +1,39 @@
+regularly:
+
+- check for undocumented classes
+
+general (unsorted):
+
+- [done] hello world
+- character props
+- paragraph props
+- bookmarks
+- bookmarks vs tables
+- ole objects in general (e.g charts, at least the image)
+- drawing objects
+- fields
+- footnotes
+- forms
+- headers and footers
+- headers/footers vs page numbering (restart, etc)
+- headers/footers vs styles
+- character styles
+- unicode accents (LO 3.3+)
+- legacy accents (Go-OO 3.2 used to emit such)
+- line numbering
+- math (would be nice to be able to edit as well)
+- numberings
+- picture
+- redlines
+- sections
+- section -borders
+- outline numbering
+- stylenames vs spec rtf chars
+- tables
+- import of doc starting with a table (that was a special case with the export)
+- textframes
+- toc
+
+would be nice to have:
+
+- \ldblquote and \rdblquote are both parsed as "
