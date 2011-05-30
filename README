@@ -175,3 +175,53 @@ so:
 Once this was done, my test document containing a bold character was imported
 properly, and I only needed to implement the reset of sprms at the end of a
 group.
+
+== 2011-05-30
+
+Implemented italic and underline character attributes, then dived into font
+tables. The table has an entry for each used font. For each font, it contains:
+
+- a font number: that will be used later to refer to this entry
+- a type: so similar font can be used when the font is missing -- seems to be ignored by dmapper at the moment
+- pitch of the font: fixed or variable
+- character set: we send text to dmapper in OUString, so we need to use this locally
+- name: for this, I had to extend my RTFValue class to handle OUString, not just int
+
+(Also discussed with Cedric why do we have an Attribute and an Sprm map for the
+properties. Answer is simple: there is no point, a cleanup getting rid of
+Attribute would be nice. Till then - some properties go to Sprm, some go to
+Attributes. So I added support for Attributes in my RTFReferenceProperties
+class.)
+
+To test that the table is really imported, I modified my hello world document
+to have a second line with a custom font (which is not part of the default font
+table) and indeed the custom font appears when opening the test doc. :)
+
+Next, I looked at the color table. That's not something dmapper supports, just
+like encodings, so the table is stored in the parser. I tested the
+implementation with a test document containing a green word.
+
+Finally started to work on the stylesheet table. Not counting the few
+LO-specific keywords, in a hello-world doc an entry contains:
+
+- the index of the stylesheet
+- a 'based on' index (inheritance)
+- a 'next' index (e.g. normal text after a heading)
+- several paragraph properties
+- a name at the end
+
+Question: anyone knows what's the difference between
+http://opengrok.libreoffice.org/xref/filters/writerfilter/source/dmapper/StyleSheetTable.cxx#418[NS_rtf::LN_XSTZNAME
+and NS_rtf::LN_XSTZNAME1]? (For now I use NS_rtf::LN_XSTZNAME1, since that
+seems to have an effect.)
+
+Testing this feature is a bit tricky, since the exporter repeats the contents
+of the style after a style control world -- to support clients lacking style
+support. So after converting `hello.odt` to `hello.rtf`, I manually removed
+those redundant control words.
+
+At the end of the day the index, paragraph properties and name work fine, need
+to check 'based on' and 'next' tomorrow.
+
+I also wrote a http://cgit.freedesktop.org/~vmiklos/lo-gsoc/tree/TODO[TODO] of
+what I have in my mind to implement as time passes by.
