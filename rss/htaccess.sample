@@ -1,0 +1,6 @@
+AddHandler mod_python .py
+PythonHandler libreoffice
+DirectoryIndex libreoffice.py
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/rss/libreoffice/libreoffice.py
+RewriteRule (.*) /rss/libreoffice/libreoffice.py/$1

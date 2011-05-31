@@ -1,0 +1,13 @@
+This is a mod_python script that converts your asciidoc blog to an RSS feed.
+
+Before you run it, don't forget to read the source, you need to customize at least:
+
+- the rndcache path (search for "rndcache" - with quotes; make sure that is
+  writable by the webserver, don't be afraid of using an absolute path)
+- the url of the plaintext file
+  (http://cgit.freedesktop.org/~vmiklos/lo-gsoc/tree/README?h=diary
+  in my case)
+
+If you use apache, the htaccess.sample file can help you when you write your .htaccess file for the script.
+
+With some Python knowledge, you'll figure out the rest. :-)
