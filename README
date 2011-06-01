@@ -225,3 +225,33 @@ to check 'based on' and 'next' tomorrow.
 
 I also wrote a http://cgit.freedesktop.org/~vmiklos/lo-gsoc/tree/TODO[TODO] of
 what I have in my mind to implement as time passes by.
+
+== 2011-06-01
+
+Finished paragraph styles: `\snext` and `\sbasedon`. Implemented a few keywords
+related to default values: `\pard` (restore defaults) and `\deflang`,
+`\adeflang`, `\deff`.
+
+Wanted to work on the info table (document creation time, modification time),
+but turns out the domain mapper calls the
+`com.sun.star.document.OOXMLDocumentPropertiesImporter` uno service, which
+handles ooxml only. So later I'll need to do that on my own.
+
+Started to work on character properties, my quite complete test doc in this
+topic is
+http://cgit.freedesktop.org/~vmiklos/lo-test-files/tree/writer/charprops.odt[here].
+The first few ones were trivial toggle control words, but then came highlight,
+that's more interesting. The token id is NS_sprm::LN_CShd, and it uses the
+value's getProperties() method. That should return an object, then object->resolve()
+is used, and there the object should pass a NS_ooxml::LN_CT_Shd_fill token (as
+attributes, not sprms!) with an int value, containing the color.
+
+The next problem was dmapper trying to convert the underlying color for some
+reason. Looks like nobody used that codo so far (see
+http://opengrok.libreoffice.org/search?q=0x6877[opengrok]), so I just
+http://cgit.freedesktop.org/~vmiklos/lo-filters/commit/?id=8d2312d81b488e56599164f0112c09d9528f0c74[removed]
+that conversion. After that, I could implement various underline types --
+colored and uncolored.
+
+Finally I implemented superscripts and subscripts (that took a while, due to
+bug-hunting in RTFValue::Clone()).
