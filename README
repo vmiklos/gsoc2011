@@ -255,3 +255,33 @@ colored and uncolored.
 
 Finally I implemented superscripts and subscripts (that took a while, due to
 bug-hunting in RTFValue::Clone()).
+
+== 2011-06-02
+
+Finished character properties:
+
+- rotated text
+- small capitals
+- fields: initially I just wanted to parse hyperlinks, but in fact there is
+  nothing hyperlink-specific in the code, so it should cover other field types
+  as well
+- expanded spacing
+- kerning (after
+  http://cgit.freedesktop.org/~vmiklos/lo-filters/commit/?id=97973a7ba5188939869586188688f2467883aacf[fixing]
+  the dmapper part)
+- accent characters (over dot / over coma)
+- half-height lines
+- scale width
+
+Then worked on character styles. This triggered an older bug: first, the parser
+assumed if a keyword is in the keyword table, it's handled (the table is
+generated from the spec, so this is obviously not the case). Second, I skipped
+the keyword after a `\*` only in case it was a destination. I checked once
+again the spec, and it clearly says every keyword should be skipped in that
+situation.
+
+The previously mentioned test doc had a few special symbols at the end, I
+implemented those, and now the import of the test doc looks fine.
+
+At the end of the day I started work on paragraph properties: the various
+horizontal alignment control words are implemented.

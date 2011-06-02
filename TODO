@@ -1,38 +1,42 @@
-regularly:
+regularly check for:
 
-- check for undocumented classes
+- undocumented classes
+- missing license headers
 
-general (unsorted):
+general (more or less sorted):
 
 - [done] hello world
-- character props
+- [done] character props
+- [done] character styles
 - paragraph props
-- bookmarks
-- bookmarks vs tables
-- ole objects in general (e.g charts, at least the image)
-- drawing objects
-- fields
-- footnotes
-- forms
-- headers and footers
-- headers/footers vs page numbering (restart, etc)
-- headers/footers vs styles
-- character styles
-- unicode accents (LO 3.3+)
-- legacy accents (Go-OO 3.2 used to emit such)
-- line numbering
-- math (would be nice to be able to edit as well)
 - numberings
 - picture
-- redlines
+- tables (simple + nested)
 - sections
-- section -borders
+- headers and footers
+- headers/footers vs styles
+- section-borders
+- headers/footers vs page numbering (restart, etc)
+- footnotes
+- line numbering
+- bookmarks
+- toc
+- redlines
+- drawing objects
+- forms
+- fields
+- ole objects in general (e.g charts, at least the image)
+- math (would be nice to be able to edit as well)
+
+smaller tasks:
+
+- bookmarks vs tables
+- unicode accents (LO 3.3+)
+- legacy accents (Go-OO 3.2 used to emit such)
 - outline numbering
 - stylenames vs spec rtf chars
-- tables
 - import of doc starting with a table (that was a special case with the export)
 - textframes
-- toc
 
 would be nice to have:
 
