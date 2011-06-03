@@ -284,4 +284,45 @@ The previously mentioned test doc had a few special symbols at the end, I
 implemented those, and now the import of the test doc looks fine.
 
 At the end of the day I started work on paragraph properties: the various
-horizontal alignment control words are implemented.
+horizontal alignment (left, center, right, etc.) control words are implemented.
+
+== 2011-06-03
+
+Continued paragraph properties:
+
+- indentation: left, right, first line
+- spacing: before, after, between
+- skipped register-true: looks like RTF does not support that
+- skipped font alignment: that would be `NS_sprm::LN_PWAlignFont` and not
+  implemented in the domain mapper; need to ask Cedric next week: how hard
+  adding it would be
+- window control
+- background color
+- paragraph border: this was a bit more complicated
+
+  * the domain mapper assumed the tokens will be binary if it's not ooxml
+  * the `\box` control word is before any other control word that would specify
+    what kind of border do we want, so I had to make it possible to alter the
+    attributes of an sprm after parsing it
+  * there are 15 control words for the different border types, had to look up
+    the exporter on how to map these to the `SvxBorderStyle` enum
+
+- tabs: the next challange :)
+
+  * the tab position is determined by a NS_ooxml::LN_CT_PPrBase_tabs sprms. It
+    contains a NS_ooxml::LN_CT_Tabs_tab sprms for each tabstop. Finally the
+    position value is defined by a NS_ooxml::LN_CT_TabStop_pos attribute.
+  * the same true for other attributes (kind, leader) and they can appear in a
+    random order. So my implementation creates the nested structure on-demand
+    (when the first attribute arrives), that seems to work fine so far.
+
+Other:
+
+- Added support for hex characeters.
+- Added initial support for non-ascii, non-utf8 characters.
+
+At the end of the day, the paragraph properties
+http://cgit.freedesktop.org/~vmiklos/lo-test-files/tree/writer/parprops.odt[test
+document] is imported correctly, as far as I see.
+
+What's next? I would like to continue with numbering on Monday.
