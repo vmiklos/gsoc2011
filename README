@@ -326,3 +326,45 @@ http://cgit.freedesktop.org/~vmiklos/lo-test-files/tree/writer/parprops.odt[test
 document] is imported correctly, as far as I see.
 
 What's next? I would like to continue with numbering on Monday.
+
+== 2011-06-06
+
+In RTF, numberings use 3 different layers:
+
+- the "list table": think of this as a list of templates
+- the "list override table": this instantiates the list templates
+- finally the document body uses the `\ls` keyword to refer to entries from the
+  list override table
+
+One really annoying implementation detail here is that the list table contains
+nested lists of properties, and so far I implemented the
+`writerfilter::Reference<Properties>` interface as an `std::map<Id, Value>`,
+which does not allow storing multiple Value elements of the same type. We
+discussed this with Cedric and the conclusion is that I change the
+implementation to allow multiple keys. First I wanted to use `std::vector`, but
+later it turned out that `std::multimap` is a better choice here.
+
+Other than that, there are multiple IDs here:
+
+- There is a 'list table', here every entry has a 'listtemplateid' and 'list id'. There are entries inside each item, but those are not numbered.
+- There is a 'list override table', that uses the 'list id' property to refer to an entry in the 'list table', and it also contains an 'ls' property, containing again an ID.
+- Finally the body text uses 'ls' to refer to an entry in the 'list override table'.
+
+Regarding how a numbering looks like, a standard `1.`, `2.`, etc. numbering
+looks like this in RTF:
+
+----
+{\leveltext \'02\'00.;}
+{\levelnumbers\'01;}
+----
+
+The same in DOCX:
+
+----
+      <w:numFmt w:val="decimal"/>
+      <w:lvlText w:val="%1."/>
+----
+
+At the end of the day, the import of the above simple list is not ready, in
+`/writerfilter/source/dmapper/NumberingManager.cxx:614` I catch an UNO
+exception, which is sadly without a message. I'll debug it further. :)
