@@ -9,6 +9,7 @@ general (more or less sorted):
 - [done] character props
 - [done] character styles
 - [done] paragraph props
+- [done] unicode support
 - numberings
 - picture
 - tables (simple + nested)
@@ -31,8 +32,6 @@ general (more or less sorted):
 smaller tasks:
 
 - bookmarks vs tables
-- unicode accents (LO 3.3+)
-- legacy accents (Go-OO 3.2 used to emit such)
 - outline numbering
 - stylenames vs spec rtf chars
 - import of doc starting with a table (that was a special case with the export)

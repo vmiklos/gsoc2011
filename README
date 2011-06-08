@@ -368,3 +368,29 @@ The same in DOCX:
 At the end of the day, the import of the above simple list is not ready, in
 `/writerfilter/source/dmapper/NumberingManager.cxx:614` I catch an UNO
 exception, which is sadly without a message. I'll debug it further. :)
+
+== 2011-06-08
+
+Worked on the `i18n.odt` test document, after fixing a bug in the hex parser
+and implementing `\u`, it's now imported properly.
+
+Back to numberings:
+
+- my test document is now imported without errors
+- the result still lacks numberings
+- added pretty-print for sprm/attribute ids to xml dump
+- reading xml dump, so far nothing really different to the docx dump that *is*
+  imported properly
+- reading resulting odf, list style (`WWNum-1`) is there, at least
+- finally found, the NS_rtf::LN_LSID property should be an attribute, not an
+  sprm ;)
+
+As a result, import of bullet lists is now implemented.
+
+Split the character and paragraph properties, this is needed because `\plain`
+resets character properties, while `\pard` resets paragraph properties only.
+This triggered a bug: dmapper ignores the parameter of the double strike
+through character property (so actually this improves the docx import as well
+:) ).
+
+Tomorrow I plan to continue with numbered lists.
