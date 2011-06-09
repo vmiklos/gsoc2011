@@ -10,7 +10,7 @@ general (more or less sorted):
 - [done] character styles
 - [done] paragraph props
 - [done] unicode support
-- numberings
+- [done] numberings
 - picture
 - tables (simple + nested)
 - sections

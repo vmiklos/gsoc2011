@@ -394,3 +394,72 @@ through character property (so actually this improves the docx import as well
 :) ).
 
 Tomorrow I plan to continue with numbered lists.
+
+== 2011-06-09
+
+Added support for the rest of the numbering types: "none" and "numbered".
+
+Learned how to check if an `std::vector` contains an element
+(http://cgit.freedesktop.org/~vmiklos/lo-gsoc/tree/test.cc[example]).
+
+RTF and DOCX use a similar syntax to declare what syntax the numbering should
+use, but they are a bit different. For a numbering like this:
+
+----
+1. foo
+   1.1 bar
+       1.1.1 baz
+----
+
+For the third line, DOCX uses:
+
+----
+<w:lvlText w:val=" %1.%2.%3 "/>
+----
+
+For the third line, RTF uses:
+
+----
+{\leveltext \'07 \'00.\'01.\'02 ;}
+{\levelnumbers\'02\'04\'06;}
+----
+
+which can be converted for the dmapper to ` %1.%2.%3 ` without problems. The
+troulbe is that in case you have a numbering like:
+
+----
+1. foo
+   1. bar
+----
+
+Then DOCX uses:
+
+----
+<w:lvlText w:val="%2."/>
+----
+
+and RTF uses:
+
+----
+{\leveltext \'02\'01.;}
+{\levelnumbers\'01;}
+----
+
+which will be converted to %1, not %2.
+
+So I looked that the docx spec (17.9.12 describes `lvlText`), which explains
+the semantics, then I could fix the RTF import.
+
+Dived into pictures. As usual, I wanted to export the related odt test file (in
+this case
+http://cgit.freedesktop.org/~vmiklos/lo-test-files/tree/writer/picture.odt[picture.odt])
+as docx and see how the domain mapper deals with it. Unfortunately it seems
+dmapper is https://bugs.freedesktop.org/show_bug.cgi?id=38110[having problems]
+with 'as character' pictures at the moment.
+
+So instead exported the document in Word (as RTF and DOCX). The docx one is
+parsed properly by dmapper. I stipped down manually the rtf one to include the
+picture in PNG only (then later I can add support for fallbacking to WMF).
+
+The testcase is ready, and I started poking the dmapper GraphicImport code. To
+be continued.
