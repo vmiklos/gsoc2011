@@ -463,3 +463,53 @@ picture in PNG only (then later I can add support for fallbacking to WMF).
 
 The testcase is ready, and I started poking the dmapper GraphicImport code. To
 be continued.
+
+== 2011-06-10
+
+Still reading the dmapper code regarding graphics import. A key point seems to
+be `DomainMapper::sprmWithProps`, case `NS_ooxml::LN_inline_inline`, especially
+this part:
+
+----
+pProperties->resolve(*pGraphicImport);
+m_pImpl->ImportGraphic(pProperties, eGraphicType);
+----
+
+Another important point later is `GraphicImport::lcl_attribute`, case
+`NS_ooxml::LN_shape`, which finally reveals something about what should I do
+with the binary data from RTF: it'll be an `uno::Reference< drawing::XShape>`,
+with a `GraphicURL` set. Actually it's not a meaningful one:
+
+----
+(gdb) pou sUrl
+"vnd.sun.star.GraphicObject:100000000000001000000010AF5FCE36"
+----
+
+Searching for some example code on how to create such a `drawing::XShape` from
+a (let's say) `sal_uInt8*`. Noel gave some great pointers in this area:
+
+- in oox/source/helper/graphichelper.cxx, GraphicHelper::importGraphic() can
+  convert an XInputStream to XGraphic (and I also noted that in the same file,
+  GraphicHelper::createGraphicObject() can create a graphic URL from an
+  XGraphic).
+- in oox/source/vml/vmlshape.cxx, ComplexShape::implConvertAndInsert() creates
+  an XShape from a graphic URL.
+
+Creating the graphic URL from the inputstream now works in the RTF filter as
+well.
+
+The next question is how to create the requrested XShape. It's just an
+interface, so which service to instantiate? This
+http://wiki.services.openoffice.org/wiki/Documentation/DevGuide/Drawings/Shape_Types[wiki
+page] points out it should be `GraphicObjectShape`.
+
+At the end of the day I wrote code to create the instance, but it errors out with:
+
+----
+Message :unsatisfied query for interface of type com.sun.star.uno.XInterface!
+----
+
+My guess is that it's because I tried to use the standard context factory. And
+that's it, after creating the factory from the model -- passed to the filter
+service --, instancing GraphicObjectShape works fine. Import of a trivial "as
+character" image now works!
