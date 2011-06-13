@@ -40,3 +40,4 @@ smaller tasks:
 would be nice to have:
 
 - \ldblquote and \rdblquote are both parsed as "
+- missing char props: vertical alignment
