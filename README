@@ -513,3 +513,38 @@ My guess is that it's because I tried to use the standard context factory. And
 that's it, after creating the factory from the model -- passed to the filter
 service --, instancing GraphicObjectShape works fine. Import of a trivial "as
 character" image now works!
+
+== 2011-06-15
+
+Continuing pictures. Trying to get the size right. RTF has the following
+picture sizes:
+
+- picw/pich: picture size in pixels, 423 in my example
+- picwgoal/pichgoal: desired size in twips, 240 in my example
+- picscalex/picscaley: the scale value (in percent), 80 in my example
+
+But wait, there are a few other metrics here:
+
+- The user interface talks about a 192x192 picture (without dimension), with scale=100%.
+- The UNO API uses awt::Size, there the size is 337 (that's probably in mm/100).
+- dmapper takes the size in EMU (360 emu == 1 mm/100)
+
+So the first task is to figure out how to convert pixels to EMU. It turns out
+that the already used oox::GraphicHelper has
+convertScreenPixelXToHmm/convertScreenPixelYToHmm methods to do this. The
+problem is that the these methods return 8954 instead of 122040 for the example
+doc, practically rendering the picture invisible. Finally I solved this by not
+using the ooxml token ids to send the size, but RTF ones, which take pixel
+values directly.
+
+Then I had to realize that std::multimap won't work for storing
+sprms/attributes, since at the moment the size of a picture is sent after the
+picture data, which is not what the dmapper expects, so I changed that to an
+std::vector, and voila: the picture is imported with the proper size! :)
+
+I also implemented support for shape properties, wzName is handled in
+particural (picture name).
+
+Finally I implemented pictures which are not characters, but anchored to a
+paragraph. (The old importer did not display such pictures, just a place holder
+frame.)
