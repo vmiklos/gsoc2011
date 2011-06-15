@@ -545,6 +545,12 @@ std::vector, and voila: the picture is imported with the proper size! :)
 I also implemented support for shape properties, wzName is handled in
 particural (picture name).
 
-Finally I implemented pictures which are not characters, but anchored to a
-paragraph. (The old importer did not display such pictures, just a place holder
-frame.)
+Finally I looked at pictures which are not characters, but anchored to a
+paragraph. The old importer did not display such pictures, just a place holder
+frame:
+
+image::http://vmiklos.hu/project/gsoc2011/wrap-old.png[align="center"]
+
+This is now implemented:
+
+image::http://vmiklos.hu/project/gsoc2011/wrap-new.png[align="center"]
