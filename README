@@ -554,3 +554,26 @@ image::http://vmiklos.hu/project/gsoc2011/wrap-old.png[align="center"]
 This is now implemented:
 
 image::http://vmiklos.hu/project/gsoc2011/wrap-new.png[align="center"]
+
+== 2011-06-16
+
+Continuing yesterday's metrics lesson (thanks Caolan and Cedric):
+
+- a point is 1/72 of an inch
+- twip is Twenty In a Point, hence both are device-independent values
+- pixel is device-dependent
+
+And the user interface is in twips: (192*127+36)/72 = 339, where the +36 is
+just about rounding.
+
+Then implemented the `wzDescription` shape property.
+
+Later worked on tables. Trying to match the dmapper actions to RTF table
+keywords:
+
+- row: start: `\trowd` (optional), end: `\row` - endOfRowAction
+- if a paragraph is part of a table, i must have `\intbl` - NS_sprm::LN_PFInTable
+- end of a cell: `\cell` - endOfCellAction
+
+With these, a trivial table can be imported - but without borders. I'll work on
+that tomorrow.
