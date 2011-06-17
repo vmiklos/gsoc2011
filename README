@@ -577,3 +577,40 @@ keywords:
 
 With these, a trivial table can be imported - but without borders. I'll work on
 that tomorrow.
+
+== 2011-06-17
+
+Worked on table borders. dmapper expects cell properties at the end of a cell.
+RTF has them at the start of a row - but there is no row start keyword in RTF.
+:) (In practice, it's usually started by `\trowd`, but I can't rely on that.
+
+So what I chose to do is: the border types (top, left, right, bottom) create
+a container for border properties (width, color, etc.), then the `\cellx`
+keyword (which is the end of a cell definition) pushes the borders properties
+to an `std::deque`, from where each `\cell` pops an element, if the queue is
+not empty.
+
+Then I had a look at merged table cells. The relevant RTF keywords:
+
+- horizontal merges: `\clmgf`, `\clmrg` (my guess: cell merge group first, cell merge remaining group)
+- vertical merges: `\clvmgf`, `\clvmrg`
+
+One trick here is that normally paragraph properties are send with the first
+run (and the "in table" fact is a paragraph property). However, when we have
+spans, then the cell hidden by the span will have no runs. In that case the
+`\cell` keyword should trigger the send of paragraph properties, otherwise
+dmapper will think that paragraph is not part of the table.
+
+The old importer did not handle vertical merges:
+
+image::http://vmiklos.hu/project/gsoc2011/vmerge-old.png[align="center"]
+
+This is now implemented:
+
+image::http://vmiklos.hu/project/gsoc2011/vmerge-new.png[align="center"]
+
+Finally worked on minor features:
+
+- horizontal merges
+- cell backgrounds
+- cell vertical alignment
