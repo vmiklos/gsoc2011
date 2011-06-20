@@ -614,3 +614,63 @@ Finally worked on minor features:
 - horizontal merges
 - cell backgrounds
 - cell vertical alignment
+
+== 2011-06-20
+
+Found an ugly bug: a simple table with 3 columns and a single row can't be
+imported properly: the third column gets lost. Fixed: it was a problem in the
+`\cellx` parser when converting absolute widths to relative ones (as required
+by dmapper).
+
+Then fixed cell property handling: previously a new cell was started by a
+border keyword, now it just gets buffered, and a `\cellx` saves what got
+collected so far and resets the buffer. With this, tables, where the first cell
+has no border can be imported properly as well.
+
+Next, implemented more row properties:
+
+- keep table row together
+- row height
+
+After that, I dived into nested tables. Relevant bits from the spec:
+
+- nested row end: `\nestrow`, inside a `\nesttableprops` group
+- nested cell end: `\nestcell` instead of `\cell`
+- depth: `\itapN` after `\intbl` (starts from 2 as 0 is the document and 1 is the normal table)
+- the table definition (`\trowd` ... `\cellx`) moves to the `\nesttableprops`
+  group, after the contents of the cells
+
+The last one is a real problem, as previously cell properties were available
+when the parser reached the `\cell` keyword...
+
+So first I added support for the above mentioned keywords, and just parsed
+`\nestrow` from the nested table property group, so I have a working nested
+table, without caring about how to obtain table properties when sending cell
+contents.
+
+Finally we were discussing with Cedric how to do the buffering, possible on the
+tokenizer side, possible on the dmapper side, either of them is trivial. I
+started to implement the tokenizer side, but then for some reason gdb started
+to become very slow, and so I spent time with rebuilding modules I don't care
+at the moment (oox, etc) without debug support. (No idea what triggered this
+slowdown, I had the 115MB-sized debug-enabled oox library on my machine for 10
+days without problems.)
+
+Back to the buffering implementation, I created a
+`std::deque<std::pair<RTFBufferTypes, RTFValue::Pointer_t>>` to store the
+buffered tokens, where `RTFBufferTypes` is just an enum of for the dmapper
+methods (eg. instead of calling `props()`, a `BUFFER_PROPS` type is created,
+etc.), and the parameters of the methods are stored in an RTFValue, as that can
+store all the types I needed to buffer. Once I implemented the read of the
+buffer, borders of nested cells appeared.
+
+Before:
+
+image::http://vmiklos.hu/project/gsoc2011/nested-old.png[align="center"]
+
+After:
+
+image::http://vmiklos.hu/project/gsoc2011/nested-new.png[align="center"]
+
+However, my `table.odt` test doc is still not perfectly imported, I'll continue
+with ironing out those bugs.
