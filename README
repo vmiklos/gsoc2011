@@ -674,3 +674,42 @@ image::http://vmiklos.hu/project/gsoc2011/nested-new.png[align="center"]
 
 However, my `table.odt` test doc is still not perfectly imported, I'll continue
 with ironing out those bugs.
+
+== 2011-06-22
+
+Finished tables:
+
+- If the nested table is in the "A2" cell of the table, then the width of the
+  A column was 8483 instead of 4809 in my test doc.  This is because I did not
+  send the table width to the dmapper, and when it tries to calculate it in
+  `DomainMapperTableManager::endOfRowAction`, it calculates a way larger value.
+- Enabled buffering I initially introduced for nested tables even for
+  non-nested tables. The spec clearly says that a reader should not assume that
+  the table definitions are written at the start of the row, and Word does not
+  always write them there in fact.
+- Word sometimes writes cell definitions before and after rows as well. Now in
+  case we have 4 cells and 8 definitions are written, the 3rd cell will use the
+  definition of the 1st one. I solved this by resetting cell definitions at
+  `\trowd` (which was not necessary so far).
+- The `\cell` control word is written in its own group by Word, while it should
+  alter the cell definition list outside the group. Enabling buffering (given
+  that the buffer is independent from the state) helped here as well.
+
+With these, the Word-exported RTF version of my `table.odt` test document is
+imported without issues.
+
+Then I dived into sections:
+
+- implemented section breaks
+- tokenizer part of protected sections
+- columns
+- page breaks (altough even and odd page breaks seem to be unsupported by
+  dmapper, see `SectionPropertyMap::CloseSectionGroup` - only the non-zero
+  value is checked)
+
+Which means that the docx and rtf version of my `sections.odt` test document is
+now the same. (Luckily none of the above two features were supported by the old
+importer, so it won't be a regression if later I won't have time to fix dmapper
+/ sw uno api to support these.)
+
+Tomorrow I want to continue with page sizes and margins.

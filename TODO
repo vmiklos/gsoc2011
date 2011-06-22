@@ -12,8 +12,8 @@ general (more or less sorted):
 - [done] unicode support
 - [done] numberings
 - [done] picture
-- tables (simple + nested)
-- sections
+- [done] tables (simple + nested)
+- [done] sections
 - headers and footers
 - headers/footers vs styles
 - section-borders
@@ -34,10 +34,9 @@ smaller tasks:
 - bookmarks vs tables
 - outline numbering
 - stylenames vs spec rtf chars
-- import of doc starting with a table (that was a special case with the export)
 - textframes
 
-would be nice to have:
-
-- \ldblquote and \rdblquote are both parsed as "
-- missing char props: vertical alignment
+missing uno api:
+- paragraph props: vertical alignment
+- protected sections
+- page breaks: even/odd ones
