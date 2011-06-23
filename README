@@ -713,3 +713,43 @@ importer, so it won't be a regression if later I won't have time to fix dmapper
 / sw uno api to support these.)
 
 Tomorrow I want to continue with page sizes and margins.
+
+== 2011-06-23
+
+Tried to make the new filter depend on the experimental setting, without
+success so far. A patch is
+http://people.freedesktop.org/~vmiklos/experimental.diff[here], but I have no
+idea what else do I need to add as a depend.
+
+Implemented minor features:
+
+- page size and margins
+- auto-spacing
+- section and table row direction
+
+Then I had a look at what should I do with all these hich, loch and dbch
+control words (based on what the `RtfAttributeOutput` class does, so that they
+are in sync):
+
+- loch is latin, NS_sprm::LN_CRgFtc0 when it comes to fonts
+- hich is cjk (Chinese, Japanese, and Korean), NS_sprm::LN_CRgFtc1
+- dbch is ctl (Arabic, etc.), NS_sprm::LN_CRgFtc2
+
+That reduces the number of TODOs for a hello world from 31 to 13.
+
+I also looked how to test the result of the import filter automatically. I
+created a wrapper around the `oodocdiff.sh` script from the `build` repo -- and
+now in case I run:
+
+----
+./test-graphical.sh hello.odt hello.rtf
+----
+
+Then the script runs fine, while in case for example I change "Hello world!" to
+"Hello world", then the script fails as expected. An advantage is that this way
+I can also diff the docx and rtf import as well -- to decide if the bug may be
+in the dmapper or the rtf tokenizer part.
+
+Finally I started to work on headers - sadly that needs buffering as well, so
+first I need some refactoring to prevent problems with tables in headers (which
+are also buffered). I'll work start doing that.
