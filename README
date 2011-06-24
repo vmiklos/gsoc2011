@@ -752,4 +752,21 @@ in the dmapper or the rtf tokenizer part.
 
 Finally I started to work on headers - sadly that needs buffering as well, so
 first I need some refactoring to prevent problems with tables in headers (which
-are also buffered). I'll work start doing that.
+are also buffered). I'll work on that tomorrow.
+
+== 2011-06-24
+
+Worked on headers. One interesting issue here is that by default the
+destination state is not set when entering a new group (i.e. after a `{`), but
+this is not wished for `\header`, since it can contain runs, and at the end of
+the first run, we reach the "end of header" trigger. So now groups inside a
+header destination are setting the destination state to default manually.
+
+Next, I checked what api does dmapper provide for the header. dmapper has a
+`subtream(id, stream)` method. My idea is that possibly I can just remember the
+header start position, stop processing when the initial `{` is closed, and then
+the parser can call itself to parse the header again.
+
+And yes, the trick worked well enough, I can now import a simple test document
+with headers and footers. Next week, I want to start with investigating how
+fields work in headers/footers.
