@@ -770,3 +770,36 @@ the parser can call itself to parse the header again.
 And yes, the trick worked well enough, I can now import a simple test document
 with headers and footers. Next week, I want to start with investigating how
 fields work in headers/footers.
+
+== 2011-06-27
+
+Dealt with requests from Cedric:
+
+- Merged in latest master -- it was a fairly easy merge, I only had to add two
+  missing include directory to `Library_rtftok.mk`.
+- Made the new rtftok enabled only if experimental mode is checked in.
+
+Then tried to implement headers margins. Looked trivial, but somehow dmapper
+does not pick up the `NS_ooxml::LN_CT_PageMar_header` margin attribute. After
+some debugging, it turned out the issue was that I did not close the last
+section if it was a continuous one. I did that on purpose, so a horizontal line
+could be avoided at the end of the doc - but now I close it, without the
+continuous section break sprm. That way I can still avoid the ugly line, but
+header/footer properties are parsed.
+
+Next I had a look why the page number field was not imported correctly - fixed
+the field handler to deal with empty `\fldrslt` groups.
+
+Finally for some reason one of the tab positions in the header style was not
+imported. It turned out that multiple tab positions / paragraph wasn't handled
+at all, and the fix is simpler than the original code. :)
+
+That means now the RTF version of my `headers-footers.odt` test file is
+imported without issues.
+
+At the end of the day I worked on minor items:
+
+- other header / footer types (right, left, first)
+- title page
+- default tab width
+- section borders

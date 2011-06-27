@@ -14,10 +14,10 @@ general (more or less sorted):
 - [done] picture
 - [done] tables (simple + nested)
 - [done] sections
-- headers and footers
-- headers/footers vs styles
-- section-borders
-- headers/footers vs page numbering (restart, etc)
+- [done] headers and footers
+- [done] headers/footers vs styles
+- [done] section-borders
+- [skip] headers/footers vs page numbering (restart, etc)
 - footnotes
 - line numbering
 - bookmarks
@@ -33,10 +33,13 @@ smaller tasks:
 
 - bookmarks vs tables
 - outline numbering
-- stylenames vs spec rtf chars
+- stylenames vs spec rtf chars ({, accents)
 - textframes
+- nested flies (handle the error properly)
 
 missing uno api:
 - paragraph props: vertical alignment
 - protected sections
 - page breaks: even/odd ones
+- make DomainMapper_Impl::PushPageHeader handle "left" and "all" headers separately for rtf
+- NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
