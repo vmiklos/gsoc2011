@@ -18,7 +18,7 @@ general (more or less sorted):
 - [done] headers/footers vs styles
 - [done] section-borders
 - [skip] headers/footers vs page numbering (restart, etc)
-- footnotes
+- [done] footnotes
 - line numbering
 - bookmarks
 - toc

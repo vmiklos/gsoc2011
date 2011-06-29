@@ -803,3 +803,49 @@ At the end of the day I worked on minor items:
 - title page
 - default tab width
 - section borders
+
+== 2011-06-29
+
+Worked on footnotes. Footnotes with automatic numbering went fine, but custom
+characters are fun to parse. Here is a sample:
+
+----
+{\super *
+{\*\footnote *
+{\tab Footnote with one asterisk.}
+\par }
+}
+----
+
+The dmapper expects a footnote substream (`\footnote` group) and *then* an
+optional NS_ooxml::LN_CT_FtnEdnRef_customMarkFollows attribute, that should
+precede the `*` character. The problem is that normally the tokenizer sends the
+`*` character before sending the substream -- and in general before knowing
+about a footnote is coming at all.
+
+As a workaround, I'm now buffering text from the `\super` control word till the
+end of the group, and send it as a custom mark if there was footnote inside the
+group -- or send it as normal text otherwise.
+
+Finally I implemented endnotes: the chicken-and-egg problem here was that the
+`\ftnalt` control word declaring that this footnote is an endnote can only be
+accessed by the normal parser if we parse the group, but dmapper wants to know
+the type of the group before we start to parse it. So I just read the first few
+chars of the group by hand, and so far that works fine with both LO and
+Word-generated RTF.
+
+With this, new importer can import foot/endnotes better than the old filter:
+
+- all characters of the foot/endnote mark are in the field
+- the field is properly superscript
+
+Before:
+
+image::http://vmiklos.hu/project/gsoc2011/footnote-old.png[align="center"]
+
+After:
+
+image::http://vmiklos.hu/project/gsoc2011/footnote-new.png[align="center"]
+
+Also, my `test-graphical.sh` points out no differences for the RTF and DOCX
+version of my `footnote.odt` test doc.
