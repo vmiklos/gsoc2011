@@ -849,3 +849,23 @@ image::http://vmiklos.hu/project/gsoc2011/footnote-new.png[align="center"]
 
 Also, my `test-graphical.sh` points out no differences for the RTF and DOCX
 version of my `footnote.odt` test doc.
+
+== 2011-06-30
+
+Worked on line numbering. This is not something the old filter supported:
+
+Before:
+
+image::http://vmiklos.hu/project/gsoc2011/linenumbering-old.png[align="center"]
+
+After:
+
+image::http://vmiklos.hu/project/gsoc2011/linenumbering-new.png[align="center"]
+
+Then I implemented support for bookmarks. Importing bookmarks were not hard,
+but support for bookmark references seems to be missing in dmapper. I'm trying
+to add it, a work-in-progress patch is
+http://people.freedesktop.org/~vmiklos/pageref-wip.patch[here]. It works,
+except that after import, I have to manually press F9 to update the field
+contents, and so far I did not find the API to do so automatically at the end
+of import.

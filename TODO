@@ -19,8 +19,8 @@ general (more or less sorted):
 - [done] section-borders
 - [skip] headers/footers vs page numbering (restart, etc)
 - [done] footnotes
-- line numbering
-- bookmarks
+- [done] line numbering
+- [done] bookmarks
 - toc
 - redlines
 - drawing objects
@@ -37,9 +37,10 @@ smaller tasks:
 - textframes
 - nested flies (handle the error properly)
 
-missing uno api:
+missing dmapper support:
 - paragraph props: vertical alignment
 - protected sections
 - page breaks: even/odd ones
 - make DomainMapper_Impl::PushPageHeader handle "left" and "all" headers separately for rtf
 - NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
+- PAGEREF field is not supported
