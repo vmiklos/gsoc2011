@@ -21,8 +21,8 @@ general (more or less sorted):
 - [done] footnotes
 - [done] line numbering
 - [done] bookmarks
-- toc
-- redlines
+- [done] toc
+- [done] redlines
 - drawing objects
 - forms
 - fields
@@ -33,7 +33,6 @@ smaller tasks:
 
 - bookmarks vs tables
 - outline numbering
-- stylenames vs spec rtf chars ({, accents)
 - textframes
 - nested flies (handle the error properly)
 

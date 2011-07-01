@@ -869,3 +869,30 @@ http://people.freedesktop.org/~vmiklos/pageref-wip.patch[here]. It works,
 except that after import, I have to manually press F9 to update the field
 contents, and so far I did not find the API to do so automatically at the end
 of import.
+
+== 2011-07-01
+
+Worked on table of contents. In fact this feature is just a simple field, but
+it triggers other problems:
+
+- My `RTFValue` class returned "0" instead of "" when an empty string was
+  stored in it.
+- The `\listtemplateid` was handled together with `\listid` - the later is
+  referenced by the list override table, so it's not a good idea to store the
+  parameter of `\listtemplateid` as a list id. (It resulted in a crash.)
+- The tokenizer did not handle groups inside the `\fldinst` and `\fldrslt`
+  groups.
+
+With this, an originally read-only table of contents field can be imported
+properly, which was not the case with the old filter.
+
+Then I worked on redlines: implemented both insertions and deletions.
+
+Finally I fixed a few cases where input with special characters were not
+tokenized properly:
+
+- revision author names
+- font names
+- style names
+- shape properties
+- bookmarks
