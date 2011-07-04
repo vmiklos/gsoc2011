@@ -23,9 +23,9 @@ general (more or less sorted):
 - [done] bookmarks
 - [done] toc
 - [done] redlines
+- [done] fields
 - drawing objects
 - forms
-- fields
 - ole objects in general (e.g charts, at least the image)
 - math (would be nice to be able to edit as well)
 
@@ -33,8 +33,7 @@ smaller tasks:
 
 - bookmarks vs tables
 - outline numbering
-- textframes
-- nested flies (handle the error properly)
+- [skip] textframes + nested flies (handle the error properly)
 
 missing dmapper support:
 - paragraph props: vertical alignment
@@ -43,3 +42,5 @@ missing dmapper support:
 - make DomainMapper_Impl::PushPageHeader handle "left" and "all" headers separately for rtf
 - NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
 - PAGEREF field is not supported
+- comments: author name and date is not supported
+- text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ]

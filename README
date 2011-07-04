@@ -896,3 +896,33 @@ tokenized properly:
 - style names
 - shape properties
 - bookmarks
+
+== 2011-07-04
+
+Implemented annotations, though `\atnauthor` and `\atndate` is ignored so far,
+as there is no dmapper support for these yet.
+
+Refactored code to fix bug about sending shape properties to dmapper too early
+-- before reading them all, resulting in missing shape descriptions.
+
+Dived into drawing objects (they were not supported by the old filter):
+
+Before:
+
+image::http://vmiklos.hu/project/gsoc2011/draw-old.png[align="center"]
+
+After:
+
+image::http://vmiklos.hu/project/gsoc2011/draw-new.png[align="center"]
+
+- implemented position and size (this should be sent in mm/100, rtf gives it
+  twips)
+- added support for rectangles and ellipses
+- implemented custom shapes (pentagon, plus sign, cube, etc.)
+
+The last point took some time, because these custom shapes (well, not really
+really custom ones, since a single number can identify them) can be created
+using `XEnhancedCustomShapeDefaulter::createCustomShapeDefaults()`, but the
+method crashes if the shape is not part of the drawing page.
+
+To be continued -- my draw.odt test document is still not fully imported.
