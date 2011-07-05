@@ -44,3 +44,4 @@ missing dmapper support:
 - PAGEREF field is not supported
 - comments: author name and date is not supported
 - text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ]
+- \info group (document properties)

@@ -926,3 +926,12 @@ using `XEnhancedCustomShapeDefaulter::createCustomShapeDefaults()`, but the
 method crashes if the shape is not part of the drawing page.
 
 To be continued -- my draw.odt test document is still not fully imported.
+
+== 2011-07-05
+
+Continued drawings:
+
+- implemented plain text on drawings
+- implemented run properties of drawing text
+- tried to implement paragraph properties of drawing text - without success so far
+- implemented fill color: looks like the color is in BGR and not in RGB; strange
