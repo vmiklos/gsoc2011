@@ -935,3 +935,36 @@ Continued drawings:
 - implemented run properties of drawing text
 - tried to implement paragraph properties of drawing text - without success so far
 - implemented fill color: looks like the color is in BGR and not in RGB; strange
+
+== 2011-07-06
+
+Discussed the BGR issue with Cedric, it's not strange at all, the ww8 import
+has a similar `wwUtility::BGRToRGB`.
+
+Implemented more shape properties:
+
+- default fill color
+- line color
+- vertical text
+- line style
+
+Figured out how can I set a paragraph property on an `XShape`:
+
+----
+uno::Sequence< beans::PropertyValue > aProperties(1);
+aProperties[0].Name = OUString(RTL_CONSTASCII_USTRINGPARAM("ParaAdjust"));
+aProperties[0].Value <<= style::ParagraphAdjust_CENTER;
+uno::Reference<text::XTextAppend> xTextAppend(xShape, uno::UNO_QUERY);
+xTextAppend->finishParagraph(aProperties);
+----
+
+Next step is to find out why dmapper doesn't do this, when I call `props()`
+after `startShape()`. Ideally it does, since
+`DomainMapper_Impl::PushShapeContext()` pushes the `XShape` to
+`m_aTextAppendStack`, and `DomainMapper_Impl::finishParagraph()` reads from
+there.
+
+Finally found: it seems shapes can't have styles (indeed the UI does not allow
+you to set one) and `DomainMapper::lcl_startParagraphGroup()` sets a default
+style unconditionally. That should be disabled when we're in shapes. I'll make
+a patch tomorrow fixing that issue.
