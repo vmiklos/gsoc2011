@@ -968,3 +968,28 @@ Finally found: it seems shapes can't have styles (indeed the UI does not allow
 you to set one) and `DomainMapper::lcl_startParagraphGroup()` sets a default
 style unconditionally. That should be disabled when we're in shapes. I'll make
 a patch tomorrow fixing that issue.
+
+== 2011-07-07
+
+Finished shape texts:
+
+- as found yesterday, disabled default paragraph styles on shapes
+- added missing paragraph properties reset on shape text start
+- removed last empty paragraph from shape texts, like we do for headers/footers
+  already
+
+Then implemented lines: once I found I need to use `LineShape` instead of
+`CustomShape` here, it was trivial.
+
+Finally I had a look at freeform lines. They are a bit harder, so here is my
+strategy:
+
+- I wrote a
+  http://cgit.freedesktop.org/~vmiklos/lo-gsoc/plain/freeform.py[prototype], as
+  the spec is quite unclear here.
+- I want to explore what UNO API can I use to draw on an XShape.
+- Combine the two. :)
+
+So far I'm still reading code for the second point (hopefully once I see how
+`EscherPropertyContainer::CreateCustomShapeProperties()` exports a shape, it'll
+be easy to create one), to be continued tomorrow.
