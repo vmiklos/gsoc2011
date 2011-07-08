@@ -993,3 +993,39 @@ strategy:
 So far I'm still reading code for the second point (hopefully once I see how
 `EscherPropertyContainer::CreateCustomShapeProperties()` exports a shape, it'll
 be easy to create one), to be continued tomorrow.
+
+== 2011-07-08
+
+In fact `EscherPropertyContainer` is for export,
+`DffPropertyReader::ApplyCustomShapeGeometryAttributes` is a better example.
+Here is my analysis so far:
+
+- a `CustomShape` can have a `CustomShapeGeometry` property
+- that's a `uno::Sequence<beans::PropertyValue>`, and contains a `ViewBox` and
+  a `Path` property
+- `ViewBox` is an `awt::Rectangle`
+- `Path` is is again a `uno::Sequence<beans::PropertyValue>`, and contains a
+  `Coordinates` and a `Segments` property (see
+  drawing/EnhancedCustomShapePath.idl)
+
+and that's it, based on that I could implemente the following RTF shape properties:
+
+- pVerticies
+- pSegmentInfo
+- geoLeft
+- geoTop
+- geoRight
+- geoBottom
+
+which resulted in the proper import of freeform lines.
+
+Before:
+
+image::http://vmiklos.hu/project/gsoc2011/freeform-old.png[align="center"]
+
+After:
+
+image::http://vmiklos.hu/project/gsoc2011/freeform-new.png[align="center"]
+
+With this, the import of `draw.odt` is now complete, so I took the liberty to
+move all shape-related function to a separate new `RTFSdrImport` class.
