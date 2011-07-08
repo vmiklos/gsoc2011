@@ -34,8 +34,7 @@ while nSegmentInfo > 0:
 	elif nSeg == 0x6001:
 		pass
 	elif nSeg == 0x8000:
-		pass
+		print "end"
 	else:
 		print "unhandled segment '%x' in the path" % nSeg
 	nSegmentInfo -= 1
-print "endsubpath"
