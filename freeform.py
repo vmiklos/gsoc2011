@@ -23,6 +23,7 @@ while nSegmentInfo > 0:
 			ret.append("x = %s, y = %s" % (nX, nY))
 		print "curve to: %s" % "; ".join(ret)
 	elif nSeg == 0xb300:
+		print "arcto"
 		pass
 	elif nSeg == 0xac00:
 		pass
@@ -37,3 +38,4 @@ while nSegmentInfo > 0:
 	else:
 		print "unhandled segment '%x' in the path" % nSeg
 	nSegmentInfo -= 1
+print "endsubpath"
