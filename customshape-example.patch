@@ -1,0 +1,135 @@
+diff --git a/writerfilter/source/rtftok/rtfdocumentimpl.cxx b/writerfilter/source/rtftok/rtfdocumentimpl.cxx
+index e4b45f6..3869203 100644
+--- a/writerfilter/source/rtftok/rtfdocumentimpl.cxx
++++ b/writerfilter/source/rtftok/rtfdocumentimpl.cxx
+@@ -46,6 +46,9 @@
+ #include <com/sun/star/drawing/XEnhancedCustomShapeDefaulter.hpp>
+ #include <com/sun/star/drawing/XDrawPageSupplier.hpp>
+ #include <com/sun/star/drawing/LineStyle.hpp>
++#include <com/sun/star/drawing/EnhancedCustomShapeSegment.hpp>
++#include <com/sun/star/drawing/EnhancedCustomShapeParameterPair.hpp>
++#include <com/sun/star/drawing/EnhancedCustomShapeSegmentCommand.hpp>
+ #include <com/sun/star/text/WritingMode.hpp>
+ 
+ #define TWIP_TO_MM100(TWIP)     ((TWIP) >= 0 ? (((TWIP)*127L+36L)/72L) : (((TWIP)*127L-36L)/72L))
+@@ -2535,6 +2538,120 @@ void RTFDocumentImpl::resolveShapeProperties(std::vector< std::pair<rtl::OUStrin
+         xDefaulter->createCustomShapeDefaults(OUString::valueOf(sal_Int32(nType)));
+     }
+ 
++    if (nType == 0)
++    {
++        awt::Rectangle aViewBox;
++        aViewBox.X = 0;
++        aViewBox.Y = 0;
++        aViewBox.Width = 1828;
++        aViewBox.Height = 690;
++
++        uno::Sequence<drawing::EnhancedCustomShapeParameterPair> aCoordinates(22);
++        aCoordinates[0].First.Value <<= sal_Int32(91);
++        aCoordinates[0].Second.Value <<= sal_Int32(111);
++        aCoordinates[1].First.Value <<= sal_Int32(0);
++        aCoordinates[1].Second.Value <<= sal_Int32(266);
++        aCoordinates[2].First.Value <<= sal_Int32(162);
++        aCoordinates[2].Second.Value <<= sal_Int32(429);
++        aCoordinates[3].First.Value <<= sal_Int32(283);
++        aCoordinates[3].Second.Value <<= sal_Int32(495);
++        aCoordinates[4].First.Value <<= sal_Int32(401);
++        aCoordinates[4].Second.Value <<= sal_Int32(559);
++        aCoordinates[5].First.Value <<= sal_Int32(619);
++        aCoordinates[5].Second.Value <<= sal_Int32(689);
++        aCoordinates[6].First.Value <<= sal_Int32(679);
++        aCoordinates[6].Second.Value <<= sal_Int32(567);
++        aCoordinates[7].First.Value <<= sal_Int32(876);
++        aCoordinates[7].Second.Value <<= sal_Int32(165);
++        aCoordinates[8].First.Value <<= sal_Int32(853);
++        aCoordinates[8].Second.Value <<= sal_Int32(564);
++        aCoordinates[9].First.Value <<= sal_Int32(1051);
++        aCoordinates[9].Second.Value <<= sal_Int32(531);
++        aCoordinates[10].First.Value <<= sal_Int32(1188);
++        aCoordinates[10].Second.Value <<= sal_Int32(508);
++        aCoordinates[11].First.Value <<= sal_Int32(1341);
++        aCoordinates[11].Second.Value <<= sal_Int32(579);
++        aCoordinates[12].First.Value <<= sal_Int32(1471);
++        aCoordinates[12].Second.Value <<= sal_Int32(519);
++        aCoordinates[13].First.Value <<= sal_Int32(1589);
++        aCoordinates[13].Second.Value <<= sal_Int32(465);
++        aCoordinates[14].First.Value <<= sal_Int32(1827);
++        aCoordinates[14].Second.Value <<= sal_Int32(491);
++        aCoordinates[15].First.Value <<= sal_Int32(1807);
++        aCoordinates[15].Second.Value <<= sal_Int32(303);
++        aCoordinates[16].First.Value <<= sal_Int32(1795);
++        aCoordinates[16].Second.Value <<= sal_Int32(184);
++        aCoordinates[17].First.Value <<= sal_Int32(1752);
++        aCoordinates[17].Second.Value <<= sal_Int32(0);
++        aCoordinates[18].First.Value <<= sal_Int32(1579);
++        aCoordinates[18].Second.Value <<= sal_Int32(15);
++        aCoordinates[19].First.Value <<= sal_Int32(1447);
++        aCoordinates[19].Second.Value <<= sal_Int32(3);
++        aCoordinates[20].First.Value <<= sal_Int32(1327);
++        aCoordinates[20].Second.Value <<= sal_Int32(63);
++        aCoordinates[21].First.Value <<= sal_Int32(1267);
++        aCoordinates[21].Second.Value <<= sal_Int32(123);
++
++        uno::Sequence< beans::PropertyValue > aPathPropSeq(2);
++
++        aPathPropSeq[0].Name = OUString(RTL_CONSTASCII_USTRINGPARAM("Coordinates"));
++        aPathPropSeq[0].Value <<= aCoordinates;
++
++        uno::Sequence<drawing::EnhancedCustomShapeSegment> aSegments(21);
++        aSegments[0].Command = drawing::EnhancedCustomShapeSegmentCommand::MOVETO;
++        aSegments[0].Count = sal_Int32(1);
++        aSegments[1].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[1].Count = sal_Int32(0);
++        aSegments[2].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[2].Count = sal_Int32(1);
++        aSegments[3].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[3].Count = sal_Int32(0);
++        aSegments[4].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[4].Count = sal_Int32(1);
++        aSegments[5].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[5].Count = sal_Int32(0);
++        aSegments[6].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[6].Count = sal_Int32(1);
++        aSegments[7].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[7].Count = sal_Int32(0);
++        aSegments[8].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[8].Count = sal_Int32(1);
++        aSegments[9].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[9].Count = sal_Int32(0);
++        aSegments[10].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[10].Count = sal_Int32(1);
++        aSegments[11].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[11].Count = sal_Int32(0);
++        aSegments[12].Command = drawing::EnhancedCustomShapeSegmentCommand::CURVETO;
++        aSegments[12].Count = sal_Int32(1);
++        aSegments[13].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[13].Count = sal_Int32(0);
++        aSegments[14].Command = drawing::EnhancedCustomShapeSegmentCommand::LINETO;
++        aSegments[14].Count = sal_Int32(1);
++        aSegments[15].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[15].Count = sal_Int32(0);
++        aSegments[16].Command = drawing::EnhancedCustomShapeSegmentCommand::LINETO;
++        aSegments[16].Count = sal_Int32(1);
++        aSegments[17].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[17].Count = sal_Int32(0);
++        aSegments[18].Command = drawing::EnhancedCustomShapeSegmentCommand::LINETO;
++        aSegments[18].Count = sal_Int32(1);
++        aSegments[19].Command = drawing::EnhancedCustomShapeSegmentCommand::ARCTO;
++        aSegments[19].Count = sal_Int32(0);
++        aSegments[20].Command = drawing::EnhancedCustomShapeSegmentCommand::ENDSUBPATH;
++        aSegments[20].Count = sal_Int32(0);
++
++        aPathPropSeq[1].Name = OUString(RTL_CONSTASCII_USTRINGPARAM("Segments"));
++        aPathPropSeq[1].Value <<= aSegments;
++
++        uno::Sequence<beans::PropertyValue> aGeoPropSeq(2);
++        aGeoPropSeq[0].Name = OUString(RTL_CONSTASCII_USTRINGPARAM("ViewBox"));
++        aGeoPropSeq[0].Value <<= uno::Any(aViewBox);
++        aGeoPropSeq[1].Name = OUString(RTL_CONSTASCII_USTRINGPARAM("Path"));
++        aGeoPropSeq[1].Value <<= aPathPropSeq;
++        xPropertySet->setPropertyValue(OUString(RTL_CONSTASCII_USTRINGPARAM("CustomShapeGeometry")), uno::Any(aGeoPropSeq));
++    }
++
+     xShape->setPosition(awt::Point(m_aStates.top().aShape.nLeft, m_aStates.top().aShape.nTop));
+     xShape->setSize(awt::Size(m_aStates.top().aShape.nRight - m_aStates.top().aShape.nLeft,
+                 m_aStates.top().aShape.nBottom - m_aStates.top().aShape.nTop));
