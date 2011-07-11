@@ -1029,3 +1029,25 @@ image::http://vmiklos.hu/project/gsoc2011/freeform-new.png[align="center"]
 
 With this, the import of `draw.odt` is now complete, so I took the liberty to
 move all shape-related function to a separate new `RTFSdrImport` class.
+
+== 2011-07-11
+
+Fixed a footnote bug (extra paragraph at the end of an entry) in dmapper.
+
+Looked at forms, it seems only the ww8 tokenizer (which is disabled by default)
+supports this. According to
+http://wiki.services.openoffice.org/wiki/WriterFilter[this wiki page], it could
+enabled, but so far I failed to do so. When I modify
+`basis3.5/share/registry/writer.xcd` according to the wiki page, I simply get a
+meaningless error message, so I gave that up for now, and just read the dmapper
+code to see what should I send from the RTF tokenizer. Using that approach I
+implemented:
+
+- checkboxes (checked and unchecked ones)
+- text inputs
+- dropdown lists
+
+Noticed Caloan's latest
+http://cgit.freedesktop.org/libreoffice/bootstrap/tree/unusedcode.easy[callcatcher
+results], fixed the appeared debug function to be built only in case OSL_TRACE
+does something.
