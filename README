@@ -1051,3 +1051,41 @@ Noticed Caloan's latest
 http://cgit.freedesktop.org/libreoffice/bootstrap/tree/unusedcode.easy[callcatcher
 results], fixed the appeared debug function to be built only in case OSL_TRACE
 does something.
+
+== 2011-07-13
+
+Worked on separating the tokenizer and the importer. The new `RTFTokenizer` is
+a tiny class, which is about recognizing RTF tokens only, without parsing the
+tokens. It has 8 callbacks:
+
+- resolveChars - plain text
+- pushState() - new group
+- popState() - end of current group
+- dispatch* - new RTF flag, destination, symbol, toggle or value
+
+and of course the main `RTFDocumentImpl` class is still the implementation of
+these methods, which translates the RTF tokens to dmapper tokens.
+
+Then implemented the `\info` group:
+
+- creation/modification/print time
+- document statistics
+- info about author (name, company, etc.)
+
+Finally worked on importing OLE objects. I had two test doc, one containing a
+chart without native data and a math one, with native data. Sadly looks like
+when dmapper receives the `NS_ooxml::LN_object` token, then it ignores if,
+unless there is native data. So first I'm working on the math document. Status
+at the end of the day:
+
+- size is working: unlike graphic objects, ole object should have size info in
+  the `XShape`, not in character attributes - fixed
+- OLE object type is recognized, but native data isn't recognized
+- bitmap is not recognized
+- and an assertion failure at the end:
+
+----
+Error: File /home/vmiklos/git/libreoffice/master/svx/source/unodraw/unoshape.cxx, Line 3821: SvxShape::_getSupportedServiceNames: could not determine object type!
+----
+
+To be continued tomorrow.
