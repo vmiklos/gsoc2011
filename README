@@ -1089,3 +1089,22 @@ Error: File /home/vmiklos/git/libreoffice/master/svx/source/unodraw/unoshape.cxx
 ----
 
 To be continued tomorrow.
+
+== 2011-07-14
+
+Continued OLE import: fixed replacement graphics, so now the RTF version of
+`chart.odt` and `math.odt` (produced by Word 2007) can be imported, but editing
+does not work yet.
+
+Then figured out that dmapper wants the native data without the old header,
+implemented code to remove that (it's a variable-length header). With this,
+native data is sent, though when I double-click on the math object, it tries to
+launch Math, then it crashes. The behaviour is exactly same with the docx
+version.
+
+First I tried to fix the crash with experimental features disabled, patch
+http://article.gmane.org/gmane.comp.documentfoundation.libreoffice.devel/13762[here].
+
+Tomorrow I try to find out why is that the OLE object created by dmapper opens
+in a new window, while the one created by the WW8 importer can be edited
+inline.
