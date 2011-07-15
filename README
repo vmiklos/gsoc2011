@@ -1108,3 +1108,19 @@ http://article.gmane.org/gmane.comp.documentfoundation.libreoffice.devel/13762[h
 Tomorrow I try to find out why is that the OLE object created by dmapper opens
 in a new window, while the one created by the WW8 importer can be edited
 inline.
+
+== 2011-07-15
+
+Wasted time with trying to use `SvxMSDffManager` (which knows how to convert
+Word's MathType to Writer formula, etc) from writerfilter, without success so
+far. An example usage can be seen in `SwWW8ImplReader::ImportOleBase`, using
+the static `SvxMSDffManager::CreateSdrOLEFromStorage()` method. The problem is
+that it gives an `SdrObject` pointer, while I basically just want an output
+stream what I can pass over to dmapper as native data...
+
+Fixed a few related bugs:
+
+- starmath crasher when inline editing disabled (I just pushed the patch I
+  linked yesterday)
+- fixed a different crash when inline editing was enabled
+- fixed the header skip code I worked on yesterday when we have no native data

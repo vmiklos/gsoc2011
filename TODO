@@ -26,8 +26,8 @@ general (more or less sorted):
 - [done] fields
 - [done] drawing objects
 - [done] forms
-- [done] ole objects - replacement graphics
-- math (would be nice to be able to edit as well)
+- [done] ole objects: replacement graphics
+- [half] ole objects: load native data + convert (mathtype->mathml, etc)
 
 smaller tasks:
 
