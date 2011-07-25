@@ -1124,3 +1124,25 @@ Fixed a few related bugs:
   linked yesterday)
 - fixed a different crash when inline editing was enabled
 - fixed the header skip code I worked on yesterday when we have no native data
+
+== 2011-07-25
+
+http://cgit.freedesktop.org/libreoffice/writer/commit/?id=bcc8fe1b7fd77af60f1c077ea65102ca73b446c4[Fixed]
+the rtf export to emit row properties at the end of a row, as suggested by the
+spec. With this, importing `table.odt` (from lo-test-files) no longer results
+in an assertion failure in dmapper.
+
+Then I had a look at the files from the unit test of the old filter.
+
+I added fixes for the following, originally failing (where fail is an
+unexpected crash) documents:
+
+- CVE-2010-3451-1.rtf
+- CVE-2005-2972-1.rtf
+- CVE-2010-3333-1.rtf
+- CVE-2010-3452-1.rtf
+
+Finally implemented
+https://bugs.freedesktop.org/show_bug.cgi?id=36877[fdo#36877] which was
+requesting existing comment support and now-implemented comment date/author
+parsing.
