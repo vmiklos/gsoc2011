@@ -1146,3 +1146,28 @@ Finally implemented
 https://bugs.freedesktop.org/show_bug.cgi?id=36877[fdo#36877] which was
 requesting existing comment support and now-implemented comment date/author
 parsing.
+
+== 2011-07-27
+
+Worked on https://bugs.freedesktop.org/show_bug.cgi?id=36922[fdo#36922], it
+turns out that it's just a convention that both Word and Writer put each font
+entry to a group inside the font table, but a reader should handle the absence
+of groups as well, as the real separator there is the `;`.
+
+Now the real problem the bug talks about is the improper stash push/pop when
+switching groups, and that was broken in the new parser as well, as it did
+shallow copy so far instead of a deep copy. Given that the tab settings are
+nested sprms, it copied only the pointer on state push, added new tab
+positions, then popped the pointer, which resulted in new tab positions being
+kept even outside their scope.
+
+One problem here is that the RTFParserState class has a lot of members, some
+can be copied trivially, some need the mentioned deep copy method. I discussed
+this with Thorsten/Bjoern on IRC; First I provided a simple fix, where the list
+of attributes/sprms members was hardcoded. Then I introduced a new RTFSprms
+class, that is a wrapper around an std::vector that has a proper copy
+constructor. This changed a lot of code, but the end result is quite clean.
+
+Finally had a look at how could the parser handle row properties written by
+Word97, where they are at the start of the row. I have an idea for that, but
+the implementation is not yet ready. To be continued... :)

@@ -27,7 +27,7 @@ general (more or less sorted):
 - [done] drawing objects
 - [done] forms
 - [done] ole objects: replacement graphics
-- [half] ole objects: load native data + convert (mathtype->mathml, etc)
+- [done] ole objects: load native data
 
 smaller tasks:
 
@@ -45,3 +45,4 @@ missing dmapper support:
 - NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
 - PAGEREF field is not supported
 - text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ]
+- ole object: convert native data (mathtype->mathml, etc), like the ww8 import does
