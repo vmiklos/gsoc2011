@@ -1171,3 +1171,22 @@ constructor. This changed a lot of code, but the end result is quite clean.
 Finally had a look at how could the parser handle row properties written by
 Word97, where they are at the start of the row. I have an idea for that, but
 the implementation is not yet ready. To be continued... :)
+
+== 2011-07-28
+
+I finished the fix to support table definitions at row start. The next problem
+is that both Writer and Word repeat the table definition in each row, so
+implementing inheritance of row properties was not necessary so far (but the
+spec allows such inheritance). Given that now I have a test document for this
+in https://bugs.freedesktop.org/show_bug.cgi?id=35985[fdo#35985], I implemented
+this feature.
+
+I also noticed by accident that in case a cell is wider than the others, then
+the second and later rows of the table do not have the same cell width for some
+odd reason. Reading the code, I found that:
+
+- `DomainMapperTableManager::endOfRowAction()` has a `pTableGrid->size() ==
+  nGrids` check, which is false in case of "wrong" rows
+- In case of a simple 2x2 table, ideally the number of grids is 2 for both
+  rows, while in fact `pTableGrid->size()` is 4 for later rows.
+- The solution is obvious: send cell width values in the first row only.
