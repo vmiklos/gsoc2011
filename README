@@ -1190,3 +1190,17 @@ odd reason. Reading the code, I found that:
 - In case of a simple 2x2 table, ideally the number of grids is 2 for both
   rows, while in fact `pTableGrid->size()` is 4 for later rows.
 - The solution is obvious: send cell width values in the first row only.
+
+== 2011-07-29
+
+Worked on https://bugs.freedesktop.org/show_bug.cgi?id=36089[fdo#36089].  It
+turns out that some ancient Word exported math equations as fields, and
+unfortunately latex2rtf uses this format to output subscripts.
+
+Finally I merged my GSoC branch to master, so:
+
+- if you update to latest master, you can try all the goodness I work on (given
+  that you enable experimental mode)
+- when I next week will work on unit tests, I will not conflict with the
+  gnumake4 branch, which was merged in master in the meantime (my repo was
+  based on an about one month old master)
