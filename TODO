@@ -35,7 +35,6 @@ smaller tasks:
 
 misc:
 - migrate unit tests
-- copypaste should use the new filter in experimental mode
 
 missing dmapper support:
 - paragraph props: vertical alignment

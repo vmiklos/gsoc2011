@@ -1204,3 +1204,46 @@ Finally I merged my GSoC branch to master, so:
 - when I next week will work on unit tests, I will not conflict with the
   gnumake4 branch, which was merged in master in the meantime (my repo was
   based on an about one month old master)
+
+== 2011-08-01
+
+Today I want to start working on creating a unit test - similar to the one
+Caolan created for the old RTF filter. First, it took some time to figure out
+why the existing doctok unit test in writerfilter is a noop. From its output it
+was clear that it found no testcases, but the reason was not clear. After some
+tracing with gdb, it turned out that in case I change
+`CPPUNIT_TEST_SUITE_NAMED_REGISTRATION` macro to a
+`CPPUNIT_TEST_SUITE_REGISTRATION` one, then the tests get called (that's what
+the `FiltersTest` unit test in sw does).
+
+My idea was that if there is already a working doctok test, then it will be
+easy to implement a similar rtftok one, but sadly that fails early with:
+
+----
+assertion failed
+- Expression: bResult
+- UNO initialization failed
+----
+
+So I need to see why that fails or just write my RTF test from scratch.
+
+A bit later I noticed that thw test from sw lists manually the few UNO
+components it needs, after doing the same in writerfilter, I could get the
+filter invoked. Fully importing a document does not work, though. Currently it
+fails in `SwDocShell::GetStyleSheetPool()` which returns NULL in case of the
+unit test, but returns a sane value when invoked manually.
+
+Then I realised that this won't really work: the initialization I'm missing is
+done in `SwDocShell::Load()`, while unit tests are invoked when `sw` is not yet
+built. So even if it sounds strange at first, probably the best to leave the
+rtf import unit tests in sw.
+
+For the interested parties, I put out the patches
+http://people.freedesktop.org/~vmiklos/writerfilter-unit/[here], but again,
+based on the above the unit test will just crash. ;)
+
+Then I noticed that on master RTF export during copy&paste is broken, sent out
+a patch to the list to fix it.
+
+Finally had a look at the copy&paste import code, implemented the usage of the
+new rtf import in experimental mode there as well.
