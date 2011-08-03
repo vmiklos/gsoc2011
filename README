@@ -1247,3 +1247,17 @@ a patch to the list to fix it.
 
 Finally had a look at the copy&paste import code, implemented the usage of the
 new rtf import in experimental mode there as well.
+
+== 2011-08-03
+
+Updated to newer master to test the copy&pase crasher fix, wasted time to get
+an incremental rebuild, finally did a `make clean && make` and that of course
+succeeded.
+
+Talked with Caolan on how to implement the rtf import test, the idea is to not
+pass a document model to the importer, then it can be a unit test, even in
+`writerfilter`.
+
+As a result now I have a unit test pushed out that classifies all in-tree CVE
+test docs correctly (between fail and pass), except one, which passes, but
+should fail. (I'm investigating why that one is accepted.)
