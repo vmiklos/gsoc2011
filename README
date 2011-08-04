@@ -1261,3 +1261,21 @@ pass a document model to the importer, then it can be a unit test, even in
 As a result now I have a unit test pushed out that classifies all in-tree CVE
 test docs correctly (between fail and pass), except one, which passes, but
 should fail. (I'm investigating why that one is accepted.)
+
+== 2011-08-04
+
+Merged my GSoC repo to master (so I won't have to cherry-pick anything after
+the OneGit conversion), the unit test broke the tinderboxes, fun.
+
+Tried to reproduce it with a clean build, with Hungarian/English locale, with
+and without X, `make -j1` or `make -j8`, no success. Given that the error
+message was:
+
+----
+An uncaught exception of type com.sun.star.loader.CannotActivateFactoryException   
+Exception Message was: loading component library failed: file:///local/home/tinderbox/master/solver/350/unxlngx6.pro/lib/libwriterfilterlo.so
+terminate called after throwing an instance of 'com::sun::star::loader::CannotActivateFactoryException'
+----
+
+I tried to add a dependency on writerfilter, Caolan added an other one, and now
+the Gentoo/OSX tinderbox is green again. :)

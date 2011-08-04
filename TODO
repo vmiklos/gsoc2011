@@ -33,9 +33,6 @@ smaller tasks:
 
 - [skip] textframes + nested flies (handle the error properly)
 
-misc:
-- migrate unit tests
-
 missing dmapper support:
 - paragraph props: vertical alignment
 - protected sections
