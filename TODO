@@ -17,7 +17,6 @@ general (more or less sorted):
 - [done] headers and footers
 - [done] headers/footers vs styles
 - [done] section-borders
-- [skip] headers/footers vs page numbering (restart, etc)
 - [done] footnotes
 - [done] line numbering
 - [done] bookmarks
@@ -29,16 +28,10 @@ general (more or less sorted):
 - [done] ole objects: replacement graphics
 - [done] ole objects: load native data
 
-smaller tasks:
-
-- [skip] textframes + nested flies (handle the error properly)
-
 missing dmapper support:
-- paragraph props: vertical alignment
-- protected sections
-- page breaks: even/odd ones
+- protected sections (sections.rtf)
+- page breaks: even/odd ones (sections.rtf)
 - make DomainMapper_Impl::PushPageHeader handle "left" and "all" headers separately for rtf
 - NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
-- PAGEREF field is not supported
-- text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ]
-- ole object: convert native data (mathtype->mathml, etc), like the ww8 import does
+- PAGEREF field is not supported - REGRESSION
+- text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ] - REGRESSION

@@ -1279,3 +1279,50 @@ terminate called after throwing an instance of 'com::sun::star::loader::CannotAc
 
 I tried to add a dependency on writerfilter, Caolan added an other one, and now
 the Gentoo/OSX tinderbox is green again. :)
+
+== 2011-08-08
+
+Updated to core.git, the whole clone took 10 mins. (This time I measured it, so
+I have some data when others argue that git clone is slow. :) )
+
+Noticed that for some reason most of `parprops.rtf` is not imported (formatting
+gets lost) when the writerfilter module is built with dbglevel=1 (I developed
+using dbglevel=2 so far). It turned out that the style type has to be set, as
+the default is `STYLE_TYPE_UNKNOWN`, unless it's a debug build, when the
+default is `STYLE_TYPE_PARA`.
+
+Then added support for an indeterminate directory in the rtftok unit test (like
+we already have one under sw), converted all my previous odt test document to
+rtf using master, libreoffice-3.4, Word2007 and Word2010 - pleased to see the
+MathType -> MathML conversion works fine when importing a math expression from
+Word2007.
+
+Word2010 can open odt files (their import filter is far from perfect, but I
+wanted to try it out), but I did not find a way to automate the odt -> rtf
+conversion. In case of Word2007, I converted the odt files to doc using LO,
+then used the following macro:
+
+----
+Sub conv()
+    sPath = "Z:\tmp\"
+    sFile = Dir(sPath & "*.doc")
+    While sFile <> ""
+        With Documents.Open(sPath & sFile)
+            .SaveAs FileName:=sPath & Replace(sFile, "doc", "rtf"), FileFormat:=0
+            .Close
+        End With
+        sFile = Dir
+    Wend
+End Sub
+----
+
+Next, I worked on paragraph vertical alignment support in dmapper and in the
+rtf tokenizer, as a result both the rtf and docx importers parse this SPRM
+properly.
+
+Finally introduced a new `RTFSkipDestination` class -- its purpose is that the
+old `RTFDocumentImpl::skipDestination()` had to be called every time in the
+handle*() methods before return and I found that ugly. The new class has this
+logic in its destructors, so there is no way to forget calling the mentioned
+method. (Additionally, this way there is one less call from the tokenizer to
+`RTFDocumentImpl`, and I try to keep that interface thin.)
