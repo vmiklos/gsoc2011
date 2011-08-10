@@ -1326,3 +1326,22 @@ handle*() methods before return and I found that ugly. The new class has this
 logic in its destructors, so there is no way to forget calling the mentioned
 method. (Additionally, this way there is one less call from the tokenizer to
 `RTFDocumentImpl`, and I try to keep that interface thin.)
+
+== 2011-08-10
+
+The "pleased to see the MathType -> MathML conversion works fine" part was
+misleading from yesterday, it turns out the sample was a doc file with a .rtf
+suffix, that's why the conversion was fine. ;)
+
+Noticed that recently the import of the page number field is broken, bisected
+(the `MELD_LIBREOFFICE_REPOS` was good, so I could do so!), found that I broke
+it two days ago, fixed.
+
+Implemented the PAGEREF field type in dmapper, based on the work-in-progress
+patch from 2011-06-30.
+
+Read http://wiki.services.openoffice.org/wiki/Writer/Code_Conventions[this wiki
+page], updated two classes to use `boost::shared_ptr`.
+
+Finally I added support for various endnote numbering types, RTF supports 6
+types of them.
