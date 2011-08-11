@@ -1345,3 +1345,27 @@ page], updated two classes to use `boost::shared_ptr`.
 
 Finally I added support for various endnote numbering types, RTF supports 6
 types of them.
+
+== 2011-08-11
+
+Implemented import of beginning footnote/endnote number, then worked on
+footnote numbering types.
+
+Then added support for restarting footnote numbers:
+
+- Writer supports: no restart, restart on new chapter, restart on new page
+- RTF supports: no restart, restart on new section, restart on new page
+
+So I implemented no restart and restart on new page (this affected dmapper as
+well, since docx did not support this so far, either).
+
+Next, I added support for RTF_NOLINE (that's just disables the effect of
+RTF_LINEX) and ignores a few more flags which are output by the exporter
+unconditionally -- as a result now importing the hello world document finally
+doesn't mention any TODO items. ;) (So far I always cared about the result of
+the import, not about if there are remaining TODO lines or not.)
+
+Then noticed that the last char of footnotes from Word-produced RTF files are
+missing, fixed. (The problem is that Writer emits a `\par` at the end of
+footnotes and I assumed this is always the case -- but adding a `\par` isn't a
+solution either, so now I'm adding one if it's missing.)
