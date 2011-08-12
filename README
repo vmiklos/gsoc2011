@@ -1369,3 +1369,20 @@ Then noticed that the last char of footnotes from Word-produced RTF files are
 missing, fixed. (The problem is that Writer emits a `\par` at the end of
 footnotes and I assumed this is always the case -- but adding a `\par` isn't a
 solution either, so now I'm adding one if it's missing.)
+
+== 2011-08-12
+
+Worked on a `--without-help` configure switch, asked for review, pushed. (This
+way once you disable internal dictionaries -- which is I think the way to go,
+so I can avoid building the Hungarian UI, and still have Hungarian
+spellchecking -- OneGit will be really OneGit and not TwoGit. :) )
+
+Noticed that I broke import of anchored pictures, bisected, fixed.
+
+Searched why importing rectangle shapes causes a crash, found the bogus `if
+(foo.is()) foo.set()` check, removed.
+
+Worked on https://bugs.freedesktop.org/show_bug.cgi?id=37691[fdo#37691], added
+a just enough fix.
+
+Merged my GSoC repo to master.

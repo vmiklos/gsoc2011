@@ -11,7 +11,7 @@ general (more or less sorted):
 - [done] paragraph props
 - [done] unicode support
 - [done] numberings
-- [done] picture
+- [done] picture - but pictures exported by Writer are not handled: REGRESSION
 - [done] tables (simple + nested)
 - [done] sections
 - [done] headers and footers
