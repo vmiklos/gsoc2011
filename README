@@ -1386,3 +1386,16 @@ Worked on https://bugs.freedesktop.org/show_bug.cgi?id=37691[fdo#37691], added
 a just enough fix.
 
 Merged my GSoC repo to master.
+
+== 2011-08-15
+
+Implemented `\pichgoal` and `\picwgoal` control words, this is required to
+import pictures exported by LO properly. (Import from Word was fine already.)
+
+Searched why the dmapper textframe support is broken - so far what I see is the
+`NS_ooxml::LN_CT_PPrBase_framePr` token is what turns frame mode on, and that
+is never received by the dmapper. I tried out that textframe support in
+ooo-build-3-2-1 was indeed proper (in libreoffice-3-3 the text from frames is
+already missing), so now I'm trying to resurrect my ooo-build-3-2-1 tree to
+rebuild writerfilter in debug mode and see what tokens does the ooxml tokenizer
+send to dmapper there.

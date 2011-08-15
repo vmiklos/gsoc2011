@@ -11,7 +11,7 @@ general (more or less sorted):
 - [done] paragraph props
 - [done] unicode support
 - [done] numberings
-- [done] picture - but pictures exported by Writer are not handled: REGRESSION
+- [done] picture
 - [done] tables (simple + nested)
 - [done] sections
 - [done] headers and footers
@@ -35,3 +35,4 @@ missing dmapper support:
 - NS_ooxml::LN_EG_SectPrContents_pgNumType is completely ignored (page numbering style, restart)
 - text frames [ 13:28 <@cbosdonnat> vmiklos: ok... 3.3 was still creating the frames but w/o the text in them... and master doesn't create the frames at all :( ] - REGRESSION
 - ole object: convert native data (mathtype->mathml, etc), like the ww8 import does
+- crop of images is ignored
