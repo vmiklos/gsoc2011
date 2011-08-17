@@ -1399,3 +1399,30 @@ ooo-build-3-2-1 was indeed proper (in libreoffice-3-3 the text from frames is
 already missing), so now I'm trying to resurrect my ooo-build-3-2-1 tree to
 rebuild writerfilter in debug mode and see what tokens does the ooxml tokenizer
 send to dmapper there.
+
+== 2011-08-17
+
+Implemented textboxes. I left this to the end of the project as I was aware
+dmapper support is not there. There were two approaches:
+
+- The `ooo-build-3-2-1` branch exports a `framePr` token in docx (in master I
+  don't get that output) and reading the dmapper code that would allow to send
+  frame tokens, but in fact the import of it did not work for me in either
+  branch.
+- I had a look at how docx shapes are imported at the moment: master and
+  `libreoffice-3-4` does not import them, `libreoffice-3-3` creates the frames
+  without text in them, finally `ooo-build-3-2-1` imports the frames fine.
+  After some gdb tracing it turned out that the import here is done using a
+  `TextFrame`, which is sent to the dmapper as a shape.
+
+We discussed this with Cedric on IRC and decided that I fix dmapper to accept a
+properly initialized shape again, and then I added support for text frames in
+the RTF tokenizer.
+
+Finally I added some improvements:
+
+- support for multiple paragraphs inside a textframe
+- support for empty paragraphs inside a textframe
+
+It's still not yet complete, at the moment only absolute positions are
+supported, I'll add support for relative positions tomorrow.
