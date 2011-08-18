@@ -1426,3 +1426,13 @@ Finally I added some improvements:
 
 It's still not yet complete, at the moment only absolute positions are
 supported, I'll add support for relative positions tomorrow.
+
+== 2011-08-18
+
+Finished text frames, now it does the import better than the old filter: the
+anchor type of the frames wasn't imported, now they are. With this, my
+`textframes.odt` test document is imported correctly.
+
+Given that this was the last regression I'm aware of, I enabled the new RTF
+import in non-experimental mode, updated to latest master and merged my GSoC
+repo.
