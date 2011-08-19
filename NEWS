@@ -1,0 +1,127 @@
+= Summary of new features in writerfilter-based RTF import
+Miklos Vajna <vmiklos@frugalware.org>
+
+== Introduction
+
+The biggest difference is that the new exporter is an UNO component, and
+instead of accessing Writer's internals directly, it uses the domain mapper
+(created for the docx import) interface, which uses Writer's UNO API for the
+import. The vision here is that dmapper already has the implementation of
+mapping items from the Word domain to the Writer domain, so a
+writerfilter-based RTF importer reduces the amount of duplicated code.
+
+=== Terminology
+
+RTFTokenizer refers to the new UNO-based importer, RtfReader refers to the old
+built-in one.
+
+== General
+
+An RTF document consists of different types of control words (flags, toggles,
+values, etc) and text. RtfReader used to hardcode the type of the control
+words, RTFTokenizer now has this in a central table (originally generated from
+the specification), making it impossible to handle incorrectly the parameters
+of control words (e.g. handle the parameter of a value as a toggle).
+
+Also, RTFTokenizer separates the task of separating control words and text, for
+example the meaning of the special `{` character defined at a single place,
+while it was handled in 19 (!) different places in RtfReader.
+
+== List of fixed bugs
+
+- https://bugs.freedesktop.org/show_bug.cgi?id=36877 - Comments are not
+  displayed upon saving and reopening RTF, are lost on re-saving
+- https://bugs.freedesktop.org/show_bug.cgi?id=36922 - FILEOPEN, RTF import,
+  group containing tabs deletes previous tabs
+- https://bugs.freedesktop.org/show_bug.cgi?id=35985 - Changing imported RTF
+  tilts orientation of text
+- https://bugs.freedesktop.org/show_bug.cgi?id=36089 - FILEOPEN: subscripts in
+  RTF from LaTex file are missing
+- https://bugs.freedesktop.org/show_bug.cgi?id=37691 - FILEOPEN: [RTF] embedded
+  picture invisible, rendering messed up.
+
+== List of new features
+
+=== Character properties
+
+- blinking
+- relative font size in superscript characters
+
+=== Tables
+
+- vertical merged cells
+- nested tables
+
+=== Footnotes / endnotes
+
+- all characters of the foot/endnote mark are in the field
+- the field is properly superscript
+
+=== Sections
+
+- line numbering
+
+=== Fields
+
+- Postit comments are supported by RTFTokenizer.
+
+=== Drawings
+
+Drawing objects for Word 97 through Word 2007 (shapes) are now handled by
+RTFTokenizer:
+
+- basic shapes (rectangle, ellipse, etc.)
+- lines, including free-form ones
+- texts, including vertical ones and their (paragraph and character) formatting
+
+=== Form fields
+
+All types supported by the RTF format are handled by RTFTokenizer, namely:
+
+- text boxes
+- check boxes
+- list boxes
+
+=== OLE objects
+
+Their result is imported as a picture - RtfReader did not import anything.
+
+When native is available, then it's handled as well, but no automatic
+conversion is done yet (for DOC files there is an automatic conversion from
+MathType to Writer formula).
+
+=== Text frames
+
+- anchor type is now parsed by RTFTokenizer (no longer always assume 'to paragraph' but also
+  handle 'as character')
+- handling of invalid nested frames now match the behaviour of Word
+
+== DOCX changes
+
+Given that sometimes I had to improve dmapper for RTF, a few features are now
+better for docx as well:
+
+- double strikethrough character property used to have an effect till the end
+  of document (!)
+- text-to-text alignment is now imported
+- restart of footnote numbers
+- extra paragraph at the end of footnotes is no longer inserted
+
+== Changes in the source code outside RTF importer
+
+- http://cgit.freedesktop.org/libreoffice/filters/commit/?id=07e389463c185f9083110016b46b5404e0d319ea
+  fix build of writerfilter when `DEBUG_LOGGING` is defined
+- http://cgit.freedesktop.org/libreoffice/writer/commit/?id=bcc8fe1b7fd77af60f1c077ea65102ca73b446c4
+  emit row properties at the end of the row as well during export
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=aba21efaac19452e281e3d151e8f433c680c736e
+  fix crash on RTF copy&paste export
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=b161497053e9fe69e3d2ff897999c22fdba9d163
+  SwCache: fix build with dbglevel=2
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=3de3f1eb151df6e37733aafb7693c9d8d67678b8
+  Partially revert "Removed dead code"
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=007c678148b7fb0ed780a9c6b113630f4ee56719
+  Remove unused RtfSdrExport::AddShapeAttribute
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=a0d68274b6775a0845890cc771ff4101b4e558dd
+  RTF: export SVX_NUM_NUMBER_NONE
+- http://cgit.freedesktop.org/libreoffice/core/commit/?id=2ed85feaaa0ce5b9e539007fa261c1924ec7dd16
+  msword: remove duplicated svx from gb_Library_add_linked_libs
