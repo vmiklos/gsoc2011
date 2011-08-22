@@ -1447,3 +1447,28 @@ import.
 Wrote up a http://people.freedesktop.org/~vmiklos/gsoc2011-news.html[summary]
 of new features and fixes of rtftok. It contains nothing new, but gives a quick
 overview to who says "tl;dr" to this GSOC daily blog. :)
+
+== 2011-08-22
+
+Today is the firm pencil-down date, so this is probably my last post in this
+particular diary. :)
+
+The only bug I worked on today is
+http://cgit.freedesktop.org/~vmiklos/lo-test-files/tree/writer/nested-flys.rtf[this
+testcase], it's an invalid nested fly frame, where the right solution is to
+parse it as a single frame. `master` did not import any frame,
+`libreoffice-3-4` imported it as two frames.
+
+Before I forget about them, I wanted to list my most frequently used bookmarks
+during GSoC:
+
+- http://cgit.freedesktop.org/~vmiklos/[cgit]
+- http://api.openoffice.org/docs/cpp/ref/names/index.html[autodoc]
+- http://opengrok.libreoffice.org/[opengrok]
+- http://wiki.services.openoffice.org/wiki/WriterFilter[ooo wiki]
+- xml files under /tmp (when writerfilter is built using `make -sr dbglevel=2`)
+
+Finally, I want to thank the whole LibreOffice team for this wonderful adventure.  I
+learned a lot in the last three months and it was a great fun. I especially
+want to thank my mentors Cedric and Bjoern for their help and every one else
+who helped on `#libreoffice-dev`. ;)
