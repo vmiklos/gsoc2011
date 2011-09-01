@@ -263,11 +263,11 @@ A possible commandline is:
 
 I used the following setup for the tests:
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm,keepaspectratio]{testarch.eps}
-\caption{Architecture of the test environment}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=150mm,keepaspectratio]{testarch.eps}
+%\caption{Architecture of the test environment}
+%\end{figure}
 
 The two machines were virtual ones, projlab2 hosted the LVM mirror, I ran all
 timers there, finally that was the iSCSI initiator. The other box served as the
@@ -340,11 +340,11 @@ Remote read & 17.642 \\
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/1_63947f00.eps}
-\caption{Comparing local and remote reads with network latency}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/1_63947f00.eps}
+%\caption{Comparing local and remote reads with network latency}
+%\end{figure}
 
 The reason for such a huge difference with 200ms latency is that this delay is
 meant for each package, while the transferred data is 2MB.
@@ -368,11 +368,11 @@ Remote with delay & 22.826 & 20.225 & 13.339 & 18.796 \\
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/7_69a4ab34.eps}
-\caption{Comparing mirror read speed of 2MB data}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/7_69a4ab34.eps}
+%\caption{Comparing mirror read speed of 2MB data}
+%\end{figure}
 
 As expected, the fastest method is doing all reads on the local node exclusively.
 
@@ -427,11 +427,11 @@ unlimited & 1.767 \\
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/2_5fabe87e.eps}
-\caption{Comparing network write speed with 2MB of data}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/2_5fabe87e.eps}
+%\caption{Comparing network write speed with 2MB of data}
+%\end{figure}
 
 From now, I measured mirror write speed of 2MB data, with various parameters.
 
@@ -439,11 +439,11 @@ From now, I measured mirror write speed of 2MB data, with various parameters.
 
 Setup: I created myvg from sdb, sdc and sdd, then mymirror on top of myvg.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{setup1.eps}
-\caption{Architecture of single log, local log, local disks}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{setup1.eps}
+%\caption{Architecture of single log, local log, local disks}
+%\end{figure}
 
 That is a single measurement (3 times, and then counting the average in seconds): 0.591, 0.603, 0.588 - average: 0.594.
 
@@ -477,11 +477,11 @@ Then I configured the client, the new devices nodes here are sdf1 and sdf2.
 
 Finally I configured the mirror named mymirror from sdb, sdf1 and sdf2.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm,keepaspectratio]{setup2.eps}
-\caption{Architecture of single log, remote log, local and remote disks}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=150mm,keepaspectratio]{setup2.eps}
+%\caption{Architecture of single log, remote log, local and remote disks}
+%\end{figure}
 
 \begin{center}
 \begin{table}[H]
@@ -500,11 +500,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s)\\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/3_5e6daa6.eps}
-\caption{Comparing network write speed with single log, remote log, local and remote disk, different ratios}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/3_5e6daa6.eps}
+%\caption{Comparing network write speed with single log, remote log, local and remote disk, different ratios}
+%\end{figure}
 
 Tear down: I disabled bandwidth limitation.
 
@@ -529,11 +529,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s)\\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/4_m724ff87b.eps}
-\caption{Comparing network write speed with single log, remote log, local and remote disk, different delays}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/4_m724ff87b.eps}
+%\caption{Comparing network write speed with single log, remote log, local and remote disk, different delays}
+%\end{figure}
 
 Tear down: I disabled the simulation of network latency, then removed myvg.
 
@@ -541,11 +541,11 @@ Tear down: I disabled the simulation of network latency, then removed myvg.
 
 Setup: I created mymirror from sdb, sdf1 and sdc.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm,keepaspectratio]{setup3.eps}
-\caption{Architecture of single log, local log, local and remote disks}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=150mm,keepaspectratio]{setup3.eps}
+%\caption{Architecture of single log, local log, local and remote disks}
+%\end{figure}
 
 \begin{center}
 \begin{table}[H]
@@ -564,11 +564,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s) \\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/5_5d601c11.eps}
-\caption{Comparing network write speed with single log, local log, local and remote disk, different ratios}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/5_5d601c11.eps}
+%\caption{Comparing network write speed with single log, local log, local and remote disk, different ratios}
+%\end{figure}
 
 Tear down: I disabled bandwidth limitation.
 
@@ -593,11 +593,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s) \\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/6_273f2c73.eps}
-\caption{Comparing network write speed with single log, local log, local and remote disk, different delays}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/6_273f2c73.eps}
+%\caption{Comparing network write speed with single log, local log, local and remote disk, different delays}
+%\end{figure}
 
 Tear down: I disabled network latency, then removed myvg.
 
@@ -610,11 +610,11 @@ since then this is a custom system.
 
 Setup: I created myvg from sdb, sdc, sdd and sde.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{setup4.eps}
-\caption{Architecture of mirrored log, local disks}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{setup4.eps}
+%\caption{Architecture of mirrored log, local disks}
+%\end{figure}
 
 That is a single measurement (3 times, and then counting the average in seconds):
 3.183, 3.181, 3.195, average: 3.186.
@@ -625,11 +625,11 @@ Tear down: I removed myvg.
 
 Setup: I created myvg from sdb, sdf1, sdc and sdf2.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=150mm,keepaspectratio]{setup5.eps}
-\caption{Architecture of mirrored log, local and remote disks}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=150mm,keepaspectratio]{setup5.eps}
+%\caption{Architecture of mirrored log, local and remote disks}
+%\end{figure}
 
 \begin{center}
 \begin{table}[H]
@@ -648,11 +648,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s)\\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/8_m1d51a4a2.eps}
-\caption{Comparing network write speed with mirrored log, local and remote disk, different ratios}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/8_m1d51a4a2.eps}
+%\caption{Comparing network write speed with mirrored log, local and remote disk, different ratios}
+%\end{figure}
 
 Tear down: I stopped the bandwidth limit.
 
@@ -677,11 +677,11 @@ Type & m1 (s) & m2 (s) & m3 (s) & avg (s) \\ \hline
 \end{table}
 \end{center}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=75mm,keepaspectratio]{charts/9.eps}
-\caption{Comparing network write speed with mirrored log, local and remote disk, different delays}
-\end{figure}
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=75mm,keepaspectratio]{charts/9.eps}
+%\caption{Comparing network write speed with mirrored log, local and remote disk, different delays}
+%\end{figure}
 
 Tear down: I disabled network latency, then removed myvg.
 
@@ -827,11 +827,11 @@ executed on startup any time, which is a bit ugly.
 
 \subsection*{Allow setting ios count to 0}
 
-\lstinputlisting{../../patches/0001-dm-mirror-allow-setting-ios-count-to-0.patch}
+%\lstinputlisting{../../patches/0001-dm-mirror-allow-setting-ios-count-to-0.patch}
 
 \subsection*{Allow setting the default mirror}
 
-\lstinputlisting{../../patches/0002-dm-mirror-allow-setting-the-default-mirror.patch}
+%\lstinputlisting{../../patches/0002-dm-mirror-allow-setting-the-default-mirror.patch}
 
 \section{Scripts to test read and write speed}
 
@@ -839,11 +839,11 @@ These scripts were used on the \emph{projlab2} node.
 
 \subsection*{Script to measure read speed}
 
-\lstinputlisting{../../scripts/test.sh}
+%\lstinputlisting{../../scripts/test.sh}
 
 \subsection*{Script to measure write speed}
 
-\lstinputlisting{../../scripts/test-write.sh}
+%\lstinputlisting{../../scripts/test-write.sh}
 
 \section{Scripts to simulate network parameters}
 
@@ -851,10 +851,10 @@ These scripts were used on the \emph{iscsitarget} node.
 
 \subsection*{Script to add network latency}
 
-\lstinputlisting{../../scripts/delay.sh}
+%\lstinputlisting{../../scripts/delay.sh}
 
 \subsection*{Script to limit the network bandwidth available}
 
-\lstinputlisting{../../scripts/limit.sh}
+%\lstinputlisting{../../scripts/limit.sh}
 
 \end{document}
