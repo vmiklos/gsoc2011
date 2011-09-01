@@ -84,12 +84,103 @@ Internship Report
 
 \section{Introduction}
 
-LibreOffice\cite{libreoffice}.
+LibreOffice is a power-packed free, libre and open source personal
+productivity suite for Windows, Macintosh and GNU/Linux, that gives you six
+feature-rich applications for all your document production and data processing
+needs: Writer, Calc, Impress, Draw, Math and Base\cite{libreoffice}.
+
+During my internship I worked on Writer. Writer has support for lossless import
+and export from/to the ODF file format (.odt). Additionally several other
+filters are supported which are marked as "alien": such filters may lose some
+information upon loading/saving. Such an alien RTF\cite{rtf} filter was already
+implemented in LibreOffice 3.4, and my task was to improve it.
+
+The source code of LibreOffice is divided to several (at the time of writing:
+225) modules, one of them is writerfilter, which contains the import filter for
+the DOCX file format.
+
+The basic idea was that the writerfilter module already contains code to map
+Microsoft Office's concepts to LibreOffice's concepts (for example Microsoft
+Office uses section breaks for different page settings, LibreOffice uses page
+styles for that purpose, etc.), so in case I can implement a new RTF filter
+within writerfilter, we can avoid code duplication and gain mappings which were
+missing in the old RTF filter.
+
+The rest of this paper is structured as follows. First, I introduce necessary
+background knowledge, which was present before the current paper, but is needed
+to understand the rest of this work (Section 2). Section 3 describes the design
+of the solution, as well as relation with the underlying techniques. Next, I
+detail the implementation I created (Section 4) and also evaluate it (Section
+5). Finally I give a summary, including future development directions (Section
+6).
 
 \section{Background}
 
-Bla bla.
+A filter in LibreOffice is a class, that implements given interfaces, and
+performs the import or the export (or both) of a file format to one of the six
+applications.
 
+Registrations of such classes are usually handled via UNO (Universal Network
+Objects), the interface based component model of LibreOffice.\footnote{Old
+filters are not using UNO and are bundled together with applications (e.g.
+Writer).} Each filter has a configuration file, which lists the file format
+detector service and the filter service.
+
+I did not have to pay attention to the RTF file format detector service, as it
+was already working and I had no plans to improve it. The filter was an UNO
+one, but the import part of it was just a stub, that called the old RTF
+importer, that was a builtin one.
+
+Implementing a filter via UNO has multiple advantages:
+
+\begin{itemize}
+\item The applications are written in C++, but the implementation of UNO services can be anything supported by UNO (e.g. Java or Python).
+\item The filter can be built once the UNO interfaces implemented by the
+application are available, even if the source code of the application it not
+available\footnote{This may be strange as a goal for a free software project,
+but given that LibreOffice is huge and building it is non-trivial, it's
+useful.}.
+\end{itemize}
+
+The already cited RTF specification defines the major tasks of an RTF reader:
+
+\begin{itemize}
+\item Separate text from RTF controls.
+\item Parse an RTF control.
+\item Dispatch an RTF control.
+\end{itemize}
+
+Separating text from RTF controls is relatively simple: all RTF controls begin
+with a backslash and can contain a defined set of characters only.
+
+Parsing an RTF control is also relatively simple: RTF defines different type of
+control words and each of them a simple rule of what type of parameters can
+they take (if any).
+
+Dispatching an RTF control, on the other hand, is relatively complicated: once
+needs having a really good knowledge of the API of the target application,
+since most of the RTF control words will result in an API call, passing the
+parameters of the control word to the document model.
+
+Next to control words, RTF has the concept of groups. They start with a
+\textbraceleft and end with a \textbraceright -- and they should be threated
+like a stack: the scope of control words starts where they appear and ends at
+the end of the current group.
+
+RTF defines the following control word types:
+
+\begin{itemize}
+\item flags: they take no parameter, for example \textbackslash{}sbknone
+\item destinations: these appear at the start of a group and if they are
+	ignored, the whole group should be ignored, for example \textbackslash{}fonttbl
+\item symbols: they don't take parameters, either -- special symbols like \textbackslash{}tab have this type
+\item toggles: they switch a property on or off, for example bold characters are marked using \textbackslash{}b
+\item value: they always take a parameter, for example font size (\textbackslash{}fs)
+\end{itemize}
+
+Now that we are aware of basic concepts of RTF, the next section overviews the
+API requirements of Writer and explains the design of the filter that can parse
+and RTF document.
 
 \section{Design}
 
@@ -113,6 +204,8 @@ Bla bla.
 \addcontentsline{toc}{section}{References}
 
 \bibitem{libreoffice} Libreoffice, http://libreoffice.org/
+
+\bibitem{rtf} Word 2007: Rich Text Format (RTF) Specification, version 1.9.1, http://bit.ly/qD1CTV
 
 \end{thebibliography}
 
