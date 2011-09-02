@@ -332,7 +332,76 @@ end of document (!)
 
 \section{Testing}
 
-Bla bla.
+LibreOffice supports two kind of automated test types:
+
+\begin{itemize}
+\item unit tests
+\item subsequent tests
+\end{itemize}
+
+Unit tests are always executed at the end of the build of a module, the failure
+of them is considered a kind of build failure. This makes them quite useful,
+however their scope is a bit limited: they can't use UNO services from module
+they don't build-depend on.
+
+Subsequent tests are however executed manually, once the complete product is
+built. Given that most developers don't run these tests (as they are not forced
+to), it's less useful, but these tests can use all UNO services.
+
+In case of RTF import, I decided to implement unit tests. I make the domain
+mapper handle the lack of Writer services handle gently (i.e. notice the lack
+of existence, but don't fail) and this way a unit test could make sure the
+import of an RTF document results in the expected return code, but it says
+little about the actual rendered layout.
+
+LibreOffice uses the CppUnit framework for unit testing. Given that I wanted to
+be sure adding new test documents do not require code modifications, I defined
+the following document classes:
+
+\begin{itemize}
+\item pass: the document should be imported without any error
+\item fail: the import should return a proper error code (should not crash)
+\item indeterminate: the importer should just not crash
+\end{itemize}
+
+The idea is that directories can represent the given document classes, and each
+document in that directory is checked if the desired behaviour is achieved.
+
+Creating test documents was the next step. During development, I followed a
+test-driven approach, so I already had documents which should be imported
+without errors in the following categories:
+
+\begin{itemize}
+\item hello world
+\item character properties
+\item character styles
+\item paragraph properties
+\item unicode support
+\item numberings
+\item pictures
+\item tables
+\item sections
+\item headers and footers
+\item footnotes
+\item line numbering
+\item bookmarks
+\item tabla of contents
+\item red lines (change tracking)
+\item fields
+\item drawing objects
+\item forms
+\item OLE objects: replacement graphics
+\item OLE objects: load native data
+\end{itemize}
+
+For failing samples, I looked up what security advisories of
+the product referred to the RTF importer earlier: that provided test documents
+which should fail with a proper error.
+
+Last, I needed a huge collection of RTF sample documents which I could throw in
+the indeterminate directory: for that I used an existing Python script that
+collected doc files from public bugzilla entries. With little modification I
+modified it to use crawl rtf samples.
 
 \section{Future work}
 
