@@ -313,6 +313,23 @@ conversion from MathType to Writer formula).
 \end{itemize}
 \end{itemize}
 
+\subsection*{DOCX changes}
+
+Given that the domain mapper operates on tokens and the tokens are derived from
+the DOCX specification, the domain mapper is highly DOCX-specific. That means
+that when the developer documentation is lacking, usually the best is to see
+how the domain mapper works with DOCX documents, then other tokenizers can do
+the same. As a result, I also fixed bugs in the domain mapper, improving DOCX
+support in general. Here are a few items I added support for:
+
+\begin{itemize}
+\item double strikethrough character property used to have an effect till the
+end of document (!)
+\item text-to-text alignment is now imported
+\item restart of footnote numbers
+\item extra paragraph at the end of footnotes is no longer inserted
+\end{itemize}
+
 \section{Testing}
 
 Bla bla.
