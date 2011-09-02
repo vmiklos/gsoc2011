@@ -184,7 +184,72 @@ and RTF document.
 
 \section{Design}
 
-Bla bla.
+The design of the RTF filter is determined by the requirements from the RTF
+specification and the interfaces provided by the domain mapper.
+
+The control flow has the following architecture:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=50mm,keepaspectratio]{overview-architecture.eps}
+\caption{Architecture of the RTF import filter}
+\end{figure}
+
+As it can be seen, my task had two major parts:
+
+\begin{itemize}
+\item Implementing an RTF tokenizer.
+\item Improving the domain mapper as necessary.
+\end{itemize}
+
+The domain mapper provides the following interfaces, which has to be
+implemented by a tokenizer:
+
+\begin{itemize}
+\item writerfilter::Reference<Stream> -- represents a file stream, that can be tokenized
+\item writerfilter::Reference<Properties> -- represents a set of properties that modify the behaviour of text (font size)
+\item writerfilter::Reference<Table> -- represents tables of settings at the start of document (list of fonts, styles, etc.)
+\item Sprm -- represents a section, paragraph, or run (set of characters) modifier
+\item Value -- represents a parameter of an Sprm
+\end{itemize}
+
+Once these interfaces are implemented, a filter implementation has to:
+
+\begin{itemize}
+\item Create a domain mapper instance, and pass the Writer UNO API document model to it.
+\item Create a tokenizer instance, and pass file stream and the domain mapper instance to it.
+\item Call the tokenizer's resolve() method to alter the document model to represent the contents of the file stream.
+\end{itemize}
+
+The tokenizer then has the following tasks:
+
+\begin{itemize}
+\item Send initial tables to the domain mapper.
+\item Start/end sections, paragraphs, runs.
+\item Wrap the tokenized parameters to Value instances, tokens to Sprm instances.
+\item Send properties (set of sprms) at the start of sections, paragraphs or runs.
+\end{itemize}
+
+As a result, I designed the following tasks inside the RTF tokenizer library:
+
+\begin{itemize}
+\item RTFEncoding -- Helper for RTF legacy charsets.
+\item RTFSymbol -- Respresents an RTF Control Word.
+\item RTFDocumentFactory -- Hides RTFDocumentImpl behind an RTFDocument interface.
+\item RTFDocument (inherited from writerfilter::Reference<Stream>) -- Pure virtual class, the filter can access only this one.
+\item RTFDocumentImpl -- The implementation of RTFDocument, invokes the domain mapper based tokens got from RTFTokenizer.
+\item RTFReferenceProperties (inherited writerfilter::Reference<Properties>) -- Sends RTFSprm instances to the domain mapper.
+\item RTFReferenceTable (inherited from writerfilter::Reference<Table>) -- Sends tables (e.g. font table) to the domain mapper.
+\item RTFSdrImport -- Helper to import drawings, uses the (Star)Draw UNO API.
+\item RTFSkipDestination -- Helper to skip entire destinations if the destination control word is unhandled.
+\item RTFSprms -- Contains a set of RTFSprm, used by RTFReferenceProperties.
+\item RTFSprm (inherited from Sprm) -- represents an RTF control word.
+\item RTFTokenizer -- The core of the tokenizer, knows only how to separate control words (and their parameters) from text.
+\item RTFValue (inherited from Value) -- represents a parameter to an RTF control word.
+\end{itemize}
+
+Note that a set of sprms can be a tree in fact, as a Value can point to a set
+of sprms as well, recursively.
 
 \section{Implementation}
 
