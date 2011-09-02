@@ -405,7 +405,36 @@ modified it to use crawl rtf samples.
 
 \section{Future work}
 
-Bla bla.
+At the end of the internship I did some measurements about how many percent of
+the control words are implemented from the specification. Of course that number
+does not mention how relevant a keyword is: e.g. a drawing keyword not used
+since Word 6.0 is way less important than a character property that sets the
+current run as bold.
+
+Version 1.9.1 of the specification contains 1815 control words, while the RTF
+import filter at the time of writing parses 385 of them. That alone means that
+there are plenty of possibilities to improve the filter.
+
+However, there are smaller tasks which could be implemented, once the domain
+mapper would support them:
+
+\begin{itemize}
+\item protected sections
+\item page breaks: even/odd ones
+\item make DomainMapper\_Impl :: PushPageHeader() handle "left" and "all" headers separately for RTF
+\item NS\_ooxml :: LN\_EG\_SectPrContents\_pgNumType is completely ignored (page numbering style, restart)
+\item OLE objects: convert native data (mathtype to mathml, etc), like the doc import does
+\item crop of images is ignored
+\end{itemize}
+
+Additionally a performance idea: currently each control word is converted to a
+numeric constant, which is then parsed by based on the type of the control
+word. Converting to a constant means reading lines of a static array, comparing
+the string value of the control word and the current entry, and then reading
+the numeric value, if they match. This can be quite slow for large documents,
+using gperf instead would be a better solution.\footnote{It's a code generator
+that generates perfect hashes: so looking up the numeric constant in a table
+based on string value would cost a single string comparison only.}
 
 \clearpage
 
