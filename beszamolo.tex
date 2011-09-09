@@ -313,30 +313,35 @@ I fixed bugs in the following topics:
 
 \begin{itemize}
 \item Comments are not displayed upon saving and reopening RTF, are lost on
-re-saving \cite{fdo36877}
-\item Group containing tabs deletes previous tabs \cite{fdo36922}
-\item Changing imported RTF tilts orientation of text \cite{fdo35985}
-\item Subscripts in RTF from LaTex file are missing \cite{fdo36089}
-\item Embedded picture invisible, rendering messed up\cite{fdo37691}
+re-saving (fdo\#36877)
+\item Group containing tabs deletes previous tabs (fdo\#36922)
+\item Changing imported RTF tilts orientation of text (fdo\#35985)
+\item Subscripts in RTF from LaTex file are missing (fdo\#36089)
+\item Embedded picture invisible, rendering messed up (fdo\#37691)
 \end{itemize}
+
+Details about each bug can be found in the Freedesktop Bugzilla\cite{fdo}.
 
 \subsection*{New features}
 
 Once I was ready with an RTF filter that was as good as the old one, I worked on the following new features:
 
 \begin{itemize}
-\item character properties: blinking, relative font size in superscript characters
+\item character properties: blinking property, relative font size in superscript characters
 \item tables: nested tables, vertical merged cells
-\item footnotes/endnotes: all characters of the foot/endnote mark are in the field, the field is properly superscript
-\item sections: line numbering
-\item fields: postit comments
+\item footnotes/endnotes: all characters of the foot/endnote mark are in the
+	field\footnote{A field is a special set of characters which has an instruction
+	and a result part. Examples: page number, date, footnote number.}, the field is
+	properly superscript
+\item sections: when line numbering is enabled in a section, it is no longer ignored by the importer
+\item the field type \emph{postit comment} is now imported
 \item Drawing objects for Word 97 through Word 2007 (shapes) are now handled:
 \begin{itemize}
 \item basic shapes (rectangle, ellipse, etc.)
 \item lines, including free-form ones
 \item texts, including vertical ones and their (paragraph and character) formatting
 \end{itemize}
-\item form fields: all types supported by the RTF format are handled
+\item form fields (used when filling out forms in a document): all types supported by the RTF format are handled
 \item OLE objects: Their result is imported as a picture - RtfReader did not
 import anything. When native is available, then it's handled as well, but no
 automatic conversion is done yet (for DOC files there is an automatic
@@ -479,11 +484,7 @@ based on string value would cost a single string comparison only.}
 
 \bibitem{libreoffice} Libreoffice, http://libreoffice.org/
 \bibitem{rtf} Word 2007: Rich Text Format (RTF) Specification, version 1.9.1, http://bit.ly/qD1CTV
-\bibitem{fdo36877} https://bugs.freedesktop.org/show\_bug.cgi?id=36877
-\bibitem{fdo36922} https://bugs.freedesktop.org/show\_bug.cgi?id=36922
-\bibitem{fdo35985} https://bugs.freedesktop.org/show\_bug.cgi?id=35985
-\bibitem{fdo36089} https://bugs.freedesktop.org/show\_bug.cgi?id=36089
-\bibitem{fdo37691} https://bugs.freedesktop.org/show\_bug.cgi?id=37691
+\bibitem{fdo} https://bugs.freedesktop.org/
 
 \end{thebibliography}
 
