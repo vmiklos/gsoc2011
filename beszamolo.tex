@@ -179,9 +179,9 @@ since most of the RTF control words will result in an API call, passing the
 parameters of the control word to the document model.
 
 Next to control words, RTF has the concept of groups. They start with a
-\textbraceleft and end with a \textbraceright -- and they should be threated
-like a stack: the scope of control words starts where they appear and ends at
-the end of the current group.
+\textbraceleft character,  end with a \textbraceright one -- and they should be
+threated like a stack: the scope of control words starts where they appear and
+ends at the end of the current group.
 
 \subsection*{RTF Control Word Types}
 
@@ -365,7 +365,7 @@ support in general. Here are a few items I added support for:
 
 \begin{itemize}
 \item double strikethrough character property used to have an effect till the
-end of document (!)
+end of the whole document (!)
 \item text-to-text alignment is now imported
 \item restart of footnote numbers
 \item extra paragraph at the end of footnotes is no longer inserted
