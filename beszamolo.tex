@@ -223,6 +223,12 @@ As it can be seen, my task had two major parts:
 The domain mapper provides the following interfaces, which has to be
 implemented by a tokenizer:
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=75mm,keepaspectratio]{dmapper-interfaces.eps}
+\caption{Interfaces provided by the domain mapper}
+\end{figure}
+
 \begin{itemize}
 \item writerfilter::Reference<Stream> -- represents a file stream, that can be tokenized
 \item writerfilter::Reference<Properties> -- represents a set of properties that modify the behaviour of text (font size)
