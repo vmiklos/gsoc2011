@@ -120,6 +120,16 @@ development directions (Section 6).
 
 \section{Background}
 
+\subsection*{Filters}
+
+Writer follows the Model -- View -- Controller principle. Once the user wants
+to open a document, the model of the document is loaded from serialized data.
+After loading the document model, the controller initializes the view, and the
+user can see the result of the import. Serialization is done similarly: the
+model of the document is exported to a file or stream, and the view is simply
+destroyed. Such conversion between the document model and serialized data is
+called a \emph{filter}.
+
 A filter in LibreOffice is a class, that implements given interfaces, and
 performs the import or the export (or both) of a file format to one of the six
 applications.
@@ -146,6 +156,8 @@ but given that LibreOffice is huge and building it is non-trivial, it's
 useful.}.
 \end{itemize}
 
+\subsection*{Implementing an RTF Reader}
+
 The already cited RTF specification defines the major tasks of an RTF reader:
 
 \begin{itemize}
@@ -158,8 +170,8 @@ Separating text from RTF controls is relatively simple: all RTF controls begin
 with a backslash and can contain a defined set of characters only.
 
 Parsing an RTF control is also relatively simple: RTF defines different type of
-control words and each of them a simple rule of what type of parameters can
-they take (if any).
+control words -- each of them is a simple rule of what type of parameters can
+they take (if any)\footnote{For an exact list of control word types, see below.}.
 
 Dispatching an RTF control, on the other hand, is relatively complicated: once
 needs having a really good knowledge of the API of the target application,
@@ -171,15 +183,17 @@ Next to control words, RTF has the concept of groups. They start with a
 like a stack: the scope of control words starts where they appear and ends at
 the end of the current group.
 
+\subsection*{RTF Control Word Types}
+
 RTF defines the following control word types:
 
 \begin{itemize}
-\item flags: they take no parameter, for example \textbackslash{}sbknone
+\item flags: they take no parameter, for example \textbackslash{}sbknone (continous section break)
 \item destinations: these appear at the start of a group and if they are
-	ignored, the whole group should be ignored, for example \textbackslash{}fonttbl
-\item symbols: they don't take parameters, either -- special symbols like \textbackslash{}tab have this type
-\item toggles: they switch a property on or off, for example bold characters are marked using \textbackslash{}b
-\item value: they always take a parameter, for example font size (\textbackslash{}fs)
+	ignored, the whole group should be ignored, for example \textbackslash{}fonttbl (font table: list of fonts used in the document)
+\item symbols: they don't take parameters, either -- special symbols like \textbackslash{}tab (tabulator symbol) have this type
+\item toggles: they switch a property on or off, for example \textbackslash{}b (bold characters are marked with this control word)
+\item value: they always take a parameter, for example \textbackslash{}fs (font size)
 \end{itemize}
 
 Now that we are aware of basic concepts of RTF, the next section overviews the
