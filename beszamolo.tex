@@ -312,7 +312,7 @@ My RTF improvements can be separated to bugfixes and features.
 I fixed bugs in the following topics:
 
 \begin{itemize}
-\item Comments are not displayed upon saving and reopening RTF, are lost on
+\item Comments are not displayed upon saving and reopening RTF, and are lost on
 re-saving (fdo\#36877)
 \item Group containing tabs deletes previous tabs (fdo\#36922)
 \item Changing imported RTF tilts orientation of text (fdo\#35985)
@@ -410,7 +410,7 @@ document in that directory is checked if the desired behaviour is achieved.
 
 Creating test documents was the next step. During development, I followed a
 test-driven approach, so I already had documents which should be imported
-without errors in the following categories:
+without errors in the following categories\footnote{The test documents were created by me in an ad-hoc way, then I checked with the QA engineers if they are complete. We had several iterations, this test set now covers all areas where the old RTF importer worked properly, plus a few more features.}:
 
 \begin{itemize}
 \item hello world
@@ -442,7 +442,7 @@ which should fail with a proper error.
 Last, I needed a huge collection of RTF sample documents which I could throw in
 the indeterminate directory: for that I used an existing Python script that
 collected doc files from public bugzilla entries. With little modification I
-modified it to use crawl rtf samples.
+modified it to use crawl RTF samples.
 
 \section{Future work}
 
