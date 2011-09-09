@@ -96,23 +96,27 @@ information upon loading/saving. Such an alien RTF\cite{rtf} filter was already
 implemented in LibreOffice 3.4, and my task was to improve it.
 
 The source code of LibreOffice is divided to several (at the time of writing:
-225) modules, one of them is writerfilter, which contains the import filter for
-the DOCX file format.
+225) modules, two of them is \emph{writerfilter}, which contains the import
+filter for the DOCX file format and \emph{sw}, the module of Writer
+application.
 
-The basic idea was that the writerfilter module already contains code to map
-Microsoft Office's concepts to LibreOffice's concepts (for example Microsoft
-Office uses section breaks for different page settings, LibreOffice uses page
-styles for that purpose, etc.), so in case I can implement a new RTF filter
-within writerfilter, we can avoid code duplication and gain mappings which were
-missing in the old RTF filter.
+At the begining, the writerfilter module already contained code to map
+Microsoft Office's concepts to LibreOffice's ones (for example Microsoft Office
+uses section breaks for different page settings, LibreOffice uses page styles
+for that purpose, etc.), and an internal RTF import filter within the sw module
+did something similar, but without less features.
+
+In this paper I represent my work on re-writing the RTF filter in the
+writerfilter module, getting rid of code duplication and adding support for
+mappings which were missing in the old RTF filter.
 
 The rest of this paper is structured as follows. First, I introduce necessary
 background knowledge, which was present before the current paper, but is needed
 to understand the rest of this work (Section 2). Section 3 describes the design
 of the solution, as well as relation with the underlying techniques. Next, I
-detail the implementation I created (Section 4) and also evaluate it (Section
-5). Finally I give a summary, including future development directions (Section
-6).
+detail the implementation I created (Section 4). After that, I evaluate the
+created module (Section 5). Finally I give a summary, including future
+development directions (Section 6).
 
 \section{Background}
 
