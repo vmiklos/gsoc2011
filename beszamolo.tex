@@ -413,26 +413,34 @@ test-driven approach, so I already had documents which should be imported
 without errors in the following categories\footnote{The test documents were created by me in an ad-hoc way, then I checked with the QA engineers if they are complete. We had several iterations, this test set now covers all areas where the old RTF importer worked properly, plus a few more features.}:
 
 \begin{itemize}
-\item hello world
-\item character properties
-\item character styles
-\item paragraph properties
-\item unicode support
-\item numberings
-\item pictures
-\item tables
-\item sections
-\item headers and footers
-\item footnotes
-\item line numbering
-\item bookmarks
-\item tabla of contents
-\item red lines (change tracking)
-\item fields
-\item drawing objects
-\item forms
-\item OLE objects: replacement graphics
-\item OLE objects: load native data
+\item hello world: This document contains a single ``Hello World!'' string in a single paragraph.
+\item character properties: Contains testcases for properties which affect
+characters, so can differ within a paragraph as well. Examples: a character
+being bold, italic, underlined.
+\item character styles: Contains testcases for character styles, for example a
+set of characters (but not the whole paragraph) being marked as a \emph{quote},
+then style can result in characters being italic or some other set of character
+properties.
+\item paragraph properties: Contains testcases for properties which should be the same within a paragraph. Examples: indentation (left, right, centered, justified), tab positions.
+\item unicode support: RTF supports both custom encodings and unicode, in which
+case the multibyte character has to be described using control words, so the
+physical document is still ASCII. This document contains samples for various
+strings, having accents in multiple languages.
+\item numberings: Contains numbered lists, numbering with bullets and other styles.
+\item pictures: Contains pictures with different anchoring types: as character, to character, to paragraph, to page.
+\item tables: Contains different table examples: tables with different row height and column width, cell background color, cell borders, nested tables.
+\item sections: Contains sections with different properties: borders, number of columns, continuous sections, sections with different page break types.
+\item headers and footers: first page headers, headers on even, odd or all pages. Same examples for footers.
+\item footnotes: footnotes at the end of the page, section or document; restart of footnote numbering, numbering type (Roman, Arabic, etc.)
+\item line numbering: this is an extended version of the sections document, containing a section with line numbering enabled.
+\item bookmarks: simple bookmarks, bookmarks across tables, references to bookmarks.
+\item red lines (change tracking): samples for added, deleted and moved text.
+\item fields: test cases for various field types: page number, date, references, URL's.
+\item table of contents: this is an extended version of the fields document, containing several headings and finally a table of contents.
+\item drawing objects: various shape types, including rectangles, ellipses, freeform lines.
+\item forms: a document containing form controls: label, inputbox, checkbox, radio buttons.
+\item OLE objects\footnote{OLE objects are embedded to documents in two parts: first the native data, which is used during editing if the required application is available -- and a replacement graphic, that can be shown even in case the editing application is missing.}: replacement graphics -- this document contains an OLE object with native data missing (it's a chart object).
+\item OLE objects: load native data -- this document contains an OLE object with native data, which can be edited (it's a math object).
 \end{itemize}
 
 For failing samples, I looked up what security advisories of
