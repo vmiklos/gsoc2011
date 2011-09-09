@@ -97,7 +97,7 @@ implemented in LibreOffice 3.4, and my task was to improve it.
 
 The source code of LibreOffice is divided to several (at the time of writing:
 225) modules, two of them is \emph{writerfilter}, which contains the import
-filter for the DOCX file format and \emph{sw}, the module of Writer
+filter for the DOCX file format and \emph{sw} (StarWriter), the module of Writer
 application.
 
 At the begining, the writerfilter module already contained code to map
@@ -209,7 +209,7 @@ The control flow has the following architecture:
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=50mm,keepaspectratio]{overview-architecture.eps}
+\includegraphics[width=75mm,keepaspectratio]{overview-architecture.eps}
 \caption{Architecture of the RTF import filter}
 \end{figure}
 
