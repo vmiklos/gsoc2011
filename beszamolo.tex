@@ -207,9 +207,11 @@ specification and the interfaces provided by the domain mapper.
 
 The control flow has the following architecture:
 
+\vspace{10mm}
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=75mm,keepaspectratio]{overview-architecture.eps}
+\includegraphics[width=100mm,keepaspectratio]{overview-architecture.eps}
 \caption{Architecture of the RTF import filter}
 \end{figure}
 
@@ -223,9 +225,11 @@ As it can be seen, my task had two major parts:
 The domain mapper provides the following interfaces, which has to be
 implemented by a tokenizer:
 
+\vspace{10mm}
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=75mm,keepaspectratio]{dmapper-interfaces.eps}
+\includegraphics[width=100mm,keepaspectratio]{dmapper-interfaces.eps}
 \caption{Interfaces provided by the domain mapper}
 \end{figure}
 
@@ -254,22 +258,30 @@ The tokenizer then has the following tasks:
 \item Send properties (set of sprms) at the start of sections, paragraphs or runs.
 \end{itemize}
 
-As a result, I designed the following tasks inside the RTF tokenizer library:
+As a result, I designed the following classes inside the RTF tokenizer library:
+
+\vspace{10mm}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=100mm,keepaspectratio]{rtf-classes.eps}
+\caption{Classes of the RTF import filter}
+\end{figure}
 
 \begin{itemize}
 \item RTFEncoding -- Helper for RTF legacy charsets.
 \item RTFSymbol -- Respresents an RTF Control Word.
 \item RTFDocumentFactory -- Hides RTFDocumentImpl behind an RTFDocument interface.
-\item RTFDocument (inherited from writerfilter::Reference<Stream>) -- Pure virtual class, the filter can access only this one.
+\item RTFDocument -- Pure virtual class, the filter can access only this one.
 \item RTFDocumentImpl -- The implementation of RTFDocument, invokes the domain mapper based tokens got from RTFTokenizer.
-\item RTFReferenceProperties (inherited writerfilter::Reference<Properties>) -- Sends RTFSprm instances to the domain mapper.
-\item RTFReferenceTable (inherited from writerfilter::Reference<Table>) -- Sends tables (e.g. font table) to the domain mapper.
+\item RTFReferenceProperties -- Sends RTFSprm instances to the domain mapper.
+\item RTFReferenceTable -- Sends tables (e.g. font table) to the domain mapper.
 \item RTFSdrImport -- Helper to import drawings, uses the (Star)Draw UNO API.
 \item RTFSkipDestination -- Helper to skip entire destinations if the destination control word is unhandled.
 \item RTFSprms -- Contains a set of RTFSprm, used by RTFReferenceProperties.
-\item RTFSprm (inherited from Sprm) -- represents an RTF control word.
+\item RTFSprm -- represents an RTF control word.
 \item RTFTokenizer -- The core of the tokenizer, knows only how to separate control words (and their parameters) from text.
-\item RTFValue (inherited from Value) -- represents a parameter to an RTF control word.
+\item RTFValue -- represents a parameter to an RTF control word.
 \end{itemize}
 
 Note that a set of sprms can be a tree in fact, as a Value can point to a set
