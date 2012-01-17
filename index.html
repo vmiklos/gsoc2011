@@ -1,0 +1,832 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
+<title>Improve RTF Import (RTF Tokenizer)</title>
+<style type="text/css">
+/* Sans-serif font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+div#toctitle,
+span#author, span#revnumber, span#revdate, span#revremark,
+div#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+/* Serif font. */
+div.sectionbody {
+  font-family: Georgia,"Times New Roman",Times,serif;
+}
+
+/* Monospace font. */
+tt {
+  font-size: inherit;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  font-size: inherit;
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+}
+
+div#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  var cont = document.getElementById("content");
+  var noteholder = document.getElementById("footnotes");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      // Use [\s\S] in place of . so multi-line matches work.
+      // Because JavaScript has no s (dotall) regex flag.
+      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      spans[i].innerHTML =
+        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+        "' title='View footnote' class='footnote'>" + n + "</a>]";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+}
+
+}
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>Improve RTF Import (RTF Tokenizer)</h1>
+<span id="author">Miklos Vajna</span><br />
+<span id="email"><tt>&lt;<a href="mailto:vmiklos@frugalware.org">vmiklos@frugalware.org</a>&gt;</tt></span><br />
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_abstract">1. Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>For the ooxml Word import filter, a new filter framework is developed
+that has better import quality as the old separate filters, and also
+shares quite some code. Having the RTF import use that framework would
+be hugely useful; both binary doc and rtf are very similar in structure,
+and could have tokenizers plugged into the filter framework (and thus
+being handled by the same high-level filter code). The doc tokenizer is
+already worked on, so a RTF tokenizer would be a an awesome feature -
+and this summer I would like to work on this.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_content">2. Content</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_detailed_description">2.1. Detailed Description</h3>
+<div class="sect3">
+<h4 id="_full_description">2.1.1. Full description</h4>
+<div class="paragraph"><p>LibreOffice Writer&#8217;s import functionality basically has two forms. The
+old style ones are C++ filters are subcalled from the Reader class
+(for example: RtfReader for RTF, AsciiReader for ASCII, HTMLReader
+for HTML). The new style ones are implemented as an UNO component (for
+example: the writerfilter/source/ooxml directory for DOCX). There are
+currently two general problems with the RTF import filter:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+It is an MS Word format, but it does not use any shared code from
+  the filter framework.
+</p>
+</li>
+<li>
+<p>
+It has several shortcomings, almost none of the new export features
+  listed in sw/source/filter/ww8/README-rtf.txt are handled.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Porting RtfReader to use the new filter framework has been started (see
+writerfilter/source/rtftok/), but is not yet done. This summer I would
+like to finish it.</p></div>
+<div class="paragraph"><p>Additionally - as time permits, after porting is done - I want to pick
+up features from RTF specification which are not yet supported by
+LibreOffice&#8217;s RTF import filter and add support for them.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_benefits">2.1.2. Benefits</h4>
+<div class="paragraph"><p>When the project is completed, users who use the RTF import filter can
+have a better one: from a technical view it will use a more modern API,
+from a practical view, it&#8217;ll be improved in general.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_motivation">2.1.3. Motivation</h4>
+<div class="paragraph"><p>I got the idea of working on this because when I did the RTF export
+filter, I had to use Microsoft Office to test the result. Also, whenever
+a user saves a document in RTF, then opens it, all the benefits of the
+new exporter goes away, as the importer does not understand those new
+features. This gave me a feeling that improving RTF support would be a
+good idea in general.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_implementation_design">2.1.4. Implementation design</h4>
+<div class="paragraph"><p>Regarding implementation, I want to take the DOCX import filter as an
+example (without over-complicating it!) and implement the new RTF filter
+in a similar way - but of course heavily based on the current RtfReader
+implementation where it makes sense.</p></div>
+<div class="paragraph"><p>I don&#8217;t know exact details, because I haven&#8217;t (yet) read the started RTF
+tokenizer nor the relevant part (writerfilter) of the LibreOffice API,
+but I expect to read and understand the code from the
+sw/source/filter/rtf directory and I want to place the new RTF code
+under writerfilter/source/rtftok, where the DOCX one already is.</p></div>
+<div class="paragraph"><p>I&#8217;m aware that it would be possible to use XSL transformations to create
+a new RTF filter as well, but not ignoring performance aspects and my
+(quite weak) XSLT knowledge, I decided to create a C++ filter.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_references">2.1.5. References</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=DD422B8D-FF06-4207-B476-6B5396A18A2B&amp;displaylang=en">RTF
+  official specification</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://blogs.sun.com/GullFOSS/entry/the_new_microsoft_word_filter">Blog
+  post about the new work import filter framework</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementation_timeline">2.2. Implementation timeline</h3>
+<div class="sect3">
+<h4 id="_milestones">2.2.1. Milestones</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Update the development environment to latest master on
+  which I will base my work, decide where do I publish my code, work out
+  other infrastructure details. (Till 2011.05.30.)
+</p>
+</li>
+<li>
+<p>
+Understand how the already existing DOCX filter work: the tokenizer
+  and the domain mapper. (Till 2011.06.06.)
+</p>
+</li>
+<li>
+<p>
+Understand how the current RTF import filter works.
+  (Till 2011.06.13.)
+</p>
+</li>
+<li>
+<p>
+Decide how do I test my code, possibly write testcases and/or work out
+  a mechanism to compare the new filter to the old one. The more
+  automated way, the better. Partly to ensure I do not break anything, and
+  partly to provide an objective method to measure
+  my progress. Find out what features are missing from the domain mapper
+  to be able to port the RTF filter without introducing regressions. (Till
+  2011.06.20.)
+</p>
+</li>
+<li>
+<p>
+Do the actual porting: completing the tokenizer and extending the
+  domain mapper to provide the features needed for the new RTF import.
+  At first round I want to reuse code from RtfReader where possible and
+  reach a point where the new filter is as much good as the old one was.
+  (Till 2011.07.04.)
+</p>
+</li>
+<li>
+<p>
+Review what was reached, if there are differences which are decided to
+  be good ones, document them. Decide what to work on next, etc.
+  (Till 2011.07.11.)
+</p>
+</li>
+<li>
+<p>
+Fix bugs, fine-tune, update the code based on suggestions from other
+  LibreOffice developers, implement features from the specification if
+  time permits. (Till 2011.08.08.)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>So I would like the first version of the new RTF filter ready by the
+time of mid-term evaluation, then I can work out the minor problems,
+write documentation and if time permits - implement new features from
+the specification in the second half of the summer. I used concrete
+dates so that I can be checked easily if I&#8217;m on track, but of course I
+may finish with a given part a bit earlier or I may have a little delay.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_exams_holidays_etc">2.2.2. Exams, holidays, etc.</h4>
+<div class="paragraph"><p>I&#8217;m a student in Hungary, and here the exam period is between 2011.05.23
+and 2011.06.20.  Sadly this has a big overlap with the Summer of Code,
+which starts on 2011.05.23. I&#8217;m aware of this and last year I managed to
+get over this as well. I plan to work on my project 40 hours a week,
+which permits to spend entire days on my project, then work nothing a
+few days before the exam.  I don&#8217;t know the exact date, but probably
+after the mid-term evaluation I&#8217;ll have a week of holiday.  I think once
+I returned I can work more productive on my project with a fresh mind,
+compared to going nowhere during the whole summer.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_communication">2.2.3. Communication</h4>
+<div class="paragraph"><p>My experience is that IRC is handy for quick questions, but sometimes
+email is better to communicate in an asynchronous way. I also like
+writing each day about what did I do in a blog-like form.  If this is OK
+for my mentor, then I would like to use these for this project as well.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_invested_time_before_during_and_after_soc">2.2.4. Invested time before, during and after SoC</h4>
+<div class="paragraph"><p>I&#8217;m doing trivial git-related (or other areas where I&#8217;m familiar with
+the codebase) small fixes before the SoC starts, just to get used to the
+new build system, etc.  I plan to work 40 hours a week during the SoC.
+(Well, basically. I do not use a timer, the average is about something
+like this.) I don&#8217;t know the future, I hope I can do some contribution
+after SoC as well.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_future_work">2.2.5. Future work</h4>
+<div class="paragraph"><p>I don&#8217;t know anything about it so far, but I&#8217;m sure there will be new
+ideas during the implementation of the project. I&#8217;m sure I&#8217;ll at least
+document these ideas once the project is finished, so I or others can
+work on them after the end of SoC.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_relevant_knowledge">2.3. Relevant knowledge</h3>
+<div class="sect3">
+<h4 id="_experience_of_libreoffice">2.3.1. Experience of LibreOffice</h4>
+<div class="paragraph"><p>As every average Linux user - I&#8217;m using LibreOffice on a daily basis, to
+read/write/convert any non-ascii document (well, except PDF). I use
+Writer / Calc / Impress whenever the document is not long/technical
+enough that using Latex worths considering.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_experience_in_the_project_specific_area">2.3.2. Experience in the project specific area</h4>
+<div class="paragraph"><p>I expect that I&#8217;ll need to write C++ code during the project. I
+contributed to various projects written in that language, most notably I
+added
+<a href="http://cedric.bosdonnat.free.fr/wordpress/?p=697">a new RTF exporter</a> to
+Go-oo last summer, which was implemented in about 8000 lines of C++
+code.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_used_toolchains_and_platforms">2.3.3. Used toolchains and platforms</h4>
+<div class="paragraph"><p>I&#8217;m a Linux guy, I used OS X for a long time (but not currently), mainly
+for testing purposes as well. I do not really use Windows, but I have
+one installed in a virtual machine (can be useful when I want to see
+what MSO exports in RTF to feed it to the RTF importer :-) ).  I&#8217;m
+familiar with <tt>gcc</tt> and <tt>make</tt>, I used autotools for other projects
+previously as well. I&#8217;m familiar with <tt>git</tt> as well, but I&#8217;m quite new
+to LibreOffice&#8217;s new build system (though right now writerfilter uses
+dmake, it seems).</p></div>
+</div>
+<div class="sect3">
+<h4 id="_recent_interaction_with_the_libreoffice_community">2.3.4. Recent interaction with the LibreOffice community</h4>
+<div class="paragraph"><p>I&#8217;m hanging around on #libreoffice-dev, and I&#8217;m subscribed to the
+developer mailing list.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_about_me">2.4. About Me</h3>
+<div class="sect3">
+<h4 id="_where_do_i_work_study_and_my_interests">2.4.1. Where do I work/study and my interests</h4>
+<div class="paragraph"><p>Education: Completing an M.Sc. degree in Computer Science (to be
+finished this year, December - final exams in January) at Budapest
+University of Technology and Economics. I work for SZTAKI
+(<a href="http://www.sztaki.hu/?en">http://www.sztaki.hu/?en</a>, part time - 1 day in a week, since 2004). I
+have a page with a few minor projects:
+<a href="http://vmiklos.hu/projects/">http://vmiklos.hu/projects/</a></p></div>
+</div>
+<div class="sect3">
+<h4 id="_links">2.4.2. Links</h4>
+<div class="paragraph"><p>A have a page with links to patches I contributed to other FOSS
+projects:  <a href="http://vmiklos.hu/portfolio/">http://vmiklos.hu/portfolio/</a>  Mostly minor code and/or
+documentation fixes. I contributed a few more complex patches to the
+pacman package manager, the bitlbee IM gateway, Git, SWIG and
+OpenOffice.org (these are C and C++ projects).  I&#8217;m generally a
+bash, C/C++ and Python guy. I know some perl/Java/XSL as well.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_irc_name">2.4.3. IRC name</h4>
+<div class="paragraph"><p>vmiklos</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_link_to_further_information">2.5. Link to Further Information</h3>
+<div class="paragraph"><p><a href="http://wiki.documentfoundation.org/Development/Gsoc/Ideas#Improve_RTF_Import_.28RTF_Tokenizer.29">http://wiki.documentfoundation.org/Development/Gsoc/Ideas#Improve_RTF_Import_.28RTF_Tokenizer.29</a></p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_my_easy_programming_task">3. My easy programming task</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://bugs.freedesktop.org/show_bug.cgi?id=32413#c0">Goal</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://cgit.freedesktop.org/libreoffice/writer/commit/?id=c62b8fc02d9357cea7fd399b173ed5280bf4c53c">My
+  solution</a> for the Writer part of the problem.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2011-03-29 22:52:15 CEST
+</div>
+</div>
+</body>
+</html>
