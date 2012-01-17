@@ -1,0 +1,24 @@
+From c63be26e98290cb024078ba260b6bead796e6eca Mon Sep 17 00:00:00 2001
+From: Miklos Vajna <vmiklos@frugalware.org>
+Date: Thu, 24 Mar 2011 11:54:09 +0100
+Subject: [PATCH] fdo#32413: Add an apply button to style edit dialog in Writer
+
+---
+ vcl/inc/vcl/msgbox.hxx |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/vcl/inc/vcl/msgbox.hxx b/vcl/inc/vcl/msgbox.hxx
+index b834843..315e412 100644
+--- a/vcl/inc/vcl/msgbox.hxx
++++ b/vcl/inc/vcl/msgbox.hxx
+@@ -51,6 +51,7 @@ class CheckBox;
+ #define RET_NO				 3
+ #define RET_RETRY			 4
+ #define RET_IGNORE           5
++#define RET_APPLY            6
+ 
+ #define BUTTONID_OK 		 RET_OK
+ #define BUTTONID_CANCEL 	 RET_CANCEL
+-- 
+1.7.4.1
+

@@ -1,0 +1,92 @@
+From 9bee07e4a4abe1cb18a841c03fcb8e5606b1c8a6 Mon Sep 17 00:00:00 2001
+From: Miklos Vajna <vmiklos@frugalware.org>
+Date: Thu, 24 Mar 2011 11:54:59 +0100
+Subject: [PATCH] fdo#32413: Add an apply button to style edit dialog in Writer
+
+---
+ sw/source/ui/app/docst.cxx    |   11 +++++++++--
+ sw/source/ui/fmtui/tmpdlg.cxx |   13 +++++++++++++
+ sw/source/ui/inc/tmpdlg.hxx   |    1 +
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/sw/source/ui/app/docst.cxx b/sw/source/ui/app/docst.cxx
+index 6705e59..7525d37 100644
+--- a/sw/source/ui/app/docst.cxx
++++ b/sw/source/ui/app/docst.cxx
+@@ -663,7 +663,10 @@ sal_uInt16 SwDocShell::Edit( const String &rName, const String &rParent, sal_uIn
+                                                     0, *(xTmp.get()), nFamily, bColumn,
+                                                     pActShell ? pActShell : pWrtShell, bNew);
+         OSL_ENSURE(pDlg, "Dialogdiet fail!");
+-        if(RET_OK == pDlg->Execute())
++        while (1)
++        {
++            short nButton = pDlg->Execute();
++            if(RET_OK == nButton || RET_APPLY == nButton)
+         {
+             GetWrtShell()->StartAllAction();
+ 
+@@ -726,7 +729,8 @@ sal_uInt16 SwDocShell::Edit( const String &rName, const String &rParent, sal_uIn
+             // Destroy dialog before EndAction - with page-templates the
+             // ItemSet must be destroyed, so that the cursors get removed
+             // from Headers/Footers. Otherwise "GPF" happen!!!
+-            delete pDlg;
++            if(RET_OK == nButton)
++                delete pDlg;
+ 
+             pDoc->SetModified();
+             if( !bModified )	// Bug 57028
+@@ -748,6 +752,9 @@ sal_uInt16 SwDocShell::Edit( const String &rName, const String &rParent, sal_uIn
+                 pDoc->ResetModified();
+             delete pDlg;
+         }
++            if(RET_APPLY != nButton)
++                break;
++        }
+     }
+     else
+     {
+diff --git a/sw/source/ui/fmtui/tmpdlg.cxx b/sw/source/ui/fmtui/tmpdlg.cxx
+index 223def1..37a72e7 100644
+--- a/sw/source/ui/fmtui/tmpdlg.cxx
++++ b/sw/source/ui/fmtui/tmpdlg.cxx
+@@ -314,12 +314,25 @@ SwTemplateDlg::SwTemplateDlg(Window*			pParent,
+             OSL_ENSURE(!this, "wrong family");
+ 
+     }
++    EnableApplyButton( true );
++    SetApplyHandler( LINK(this, SwTemplateDlg, ApplyHdl ) );
+ }
+ 
+ SwTemplateDlg::~SwTemplateDlg()
+ {
+ }
+ 
++IMPL_LINK( SwTemplateDlg, ApplyHdl, void*, pVoid )
++{
++    (void)pVoid; //unused
++    if ( OK_Impl() )
++    {
++        Ok();
++        EndDialog( RET_APPLY );
++    }
++    return 0;
++}
++
+ short SwTemplateDlg::Ok()
+ {
+     short nRet = SfxTabDialog::Ok();
+diff --git a/sw/source/ui/inc/tmpdlg.hxx b/sw/source/ui/inc/tmpdlg.hxx
+index 6a8e7de..eca821e 100644
+--- a/sw/source/ui/inc/tmpdlg.hxx
++++ b/sw/source/ui/inc/tmpdlg.hxx
+@@ -45,6 +45,7 @@ class SwTemplateDlg: public SfxStyleDialog
+     sal_Bool		bNewStyle;
+ 
+     DECL_LINK( NumOptionsHdl, PushButton* );
++    DECL_LINK( ApplyHdl, void* );
+ 
+ public:
+     SwTemplateDlg(  Window*             pParent,
+-- 
+1.7.4.1
+
